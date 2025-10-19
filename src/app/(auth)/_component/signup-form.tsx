@@ -1,5 +1,5 @@
 "use client";
-import React from "react";
+import React, { useState } from "react";
 import Logo from "./logo";
 import { signUpSchema } from "@/schema/signUpSchema";
 import z from "zod";
@@ -17,12 +17,16 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import Link from "next/link";
+import { Eye, EyeOff } from "lucide-react";
 
 const formSchema = signUpSchema;
 
 type FormValues = z.input<typeof formSchema>;
 
 const SignUpForm = () => {
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+
   const form = useForm<FormValues>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -38,6 +42,14 @@ const SignUpForm = () => {
   async function onSubmit(values: FormValues) {
     console.log("Form values:", values);
   }
+
+  const togglePasswordVisibility = () => {
+    setShowPassword(!showPassword);
+  };
+
+  const toggleConfirmPasswordVisibility = () => {
+    setShowConfirmPassword(!showConfirmPassword);
+  };
 
   return (
     <div className="min-h-screen flex flex-col items-center justify-center">
@@ -119,18 +131,33 @@ const SignUpForm = () => {
                   <FormItem>
                     <FormLabel>Password</FormLabel>
                     <FormControl>
-                      <Input
-                        placeholder="Enter password"
-                        type="text"
-                        {...field}
-                      />
+                      <div className="relative">
+                        <Input
+                          placeholder="Enter password"
+                          type={showPassword ? "text" : "password"}
+                          {...field}
+                        />
+                        <Button
+                          type="button"
+                          variant="ghost"
+                          size="sm"
+                          className="absolute right-0 top-0 h-full px-3 py-2 hover:bg-transparent"
+                          onClick={togglePasswordVisibility}
+                        >
+                          {showPassword ? (
+                            <EyeOff className="h-4 w-4" />
+                          ) : (
+                            <Eye className="h-4 w-4" />
+                          )}
+                        </Button>
+                      </div>
                     </FormControl>
                     <FormMessage />
                   </FormItem>
                 )}
               />
 
-              {/* password field */}
+              {/* confirm password field */}
               <FormField
                 control={form.control}
                 name="confirmPassword"
@@ -138,11 +165,26 @@ const SignUpForm = () => {
                   <FormItem>
                     <FormLabel>Confirm Password</FormLabel>
                     <FormControl>
-                      <Input
-                        placeholder="Enter confirm password"
-                        type="text"
-                        {...field}
-                      />
+                      <div className="relative">
+                        <Input
+                          placeholder="Enter confirm password"
+                          type={showConfirmPassword ? "text" : "password"}
+                          {...field}
+                        />
+                        <Button
+                          type="button"
+                          variant="ghost"
+                          size="sm"
+                          className="absolute right-0 top-0 h-full px-3 py-2 hover:bg-transparent"
+                          onClick={toggleConfirmPasswordVisibility}
+                        >
+                          {showConfirmPassword ? (
+                            <EyeOff className="h-4 w-4" />
+                          ) : (
+                            <Eye className="h-4 w-4" />
+                          )}
+                        </Button>
+                      </div>
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -174,7 +216,7 @@ const SignUpForm = () => {
                 )}
               />
 
-              {/* sing up Button */}
+              {/* sign up Button */}
               <Button
                 type="submit"
                 // disabled={isLoading}
