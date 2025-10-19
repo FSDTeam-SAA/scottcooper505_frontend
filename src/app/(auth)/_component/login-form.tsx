@@ -16,12 +16,9 @@ import React, { useState } from "react";
 import { useForm } from "react-hook-form";
 import z from "zod";
 import Logo from "./logo";
+import { loginSchema } from "@/schema/loginSchema";
 
-const formSchema = z.object({
-  email: z.string().email("Please enter a valid email address"),
-  password: z.string().min(1, "Password is required"),
-  rememberMe: z.boolean().default(false),
-});
+const formSchema = loginSchema;
 
 type FormValues = z.input<typeof formSchema>;
 
@@ -49,10 +46,10 @@ const LoginForm = () => {
 
   return (
     <div className="min-h-screen flex flex-col items-center justify-center">
-      <div className="flex justify-between items-center w-full">
+      <div className="flex flex-col lg:flex-row gap-10 justify-between items-center w-full">
         <Logo />
 
-        <div className="lg:w-1/2 shadow-lg p-5 rounded-lg">
+        <div className="w-full lg:w-1/2 shadow-lg p-5 rounded-lg">
           <div className="mb-5">
             <h1 className="text-4xl font-medium mb-2">Welcome 👋</h1>
             <p>Please login here</p>
@@ -121,7 +118,7 @@ const LoginForm = () => {
                 />
                 <Link
                   href="/forgot-password"
-                  className="text-sm text-foreground hover:underline"
+                  className="text-sm text-foreground hover:underline hover:text-primary"
                 >
                   Forgot Password?
                 </Link>
@@ -144,7 +141,7 @@ const LoginForm = () => {
               Don&apos;t have an account?{" "}
               <Link
                 href="/sign-up"
-                className="text-foreground font-semibold hover:underline"
+                className="text-foreground font-semibold hover:underline hover:text-primary"
               >
                 Sign Up
               </Link>
