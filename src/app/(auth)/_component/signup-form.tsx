@@ -47,7 +47,7 @@ const SignUpForm = () => {
         <div className="lg:w-1/2 shadow-lg p-5 rounded-lg">
           <div className="mb-5">
             <h1 className="text-4xl font-medium mb-2">Create New Account</h1>
-            <p>Please enter details</p>
+            <p className="text-gray-600 text-sm">Please enter details</p>
           </div>
 
           <Form {...form}>

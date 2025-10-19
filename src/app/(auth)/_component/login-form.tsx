@@ -52,7 +52,7 @@ const LoginForm = () => {
         <div className="w-full lg:w-1/2 shadow-lg p-5 rounded-lg">
           <div className="mb-5">
             <h1 className="text-4xl font-medium mb-2">Welcome 👋</h1>
-            <p>Please login here</p>
+            <p className="text-gray-600 text-sm">Please login here</p>
           </div>
 
           <Form {...form}>
