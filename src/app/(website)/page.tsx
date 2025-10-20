@@ -3,7 +3,7 @@ import OurService from "@/components/home/our-service";
 
 const page = () => {
   return (
-    <div className="space-y-10">
+    <div className="space-y-12">
       <Hero />
       <OurService />
     </div>
