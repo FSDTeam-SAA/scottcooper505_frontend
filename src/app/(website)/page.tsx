@@ -1,9 +1,11 @@
-import React from 'react'
+import Hero from "@/components/home/Hero";
 
 const page = () => {
   return (
-    <div>Website will start</div>
-  )
-}
+    <div>
+      <Hero />
+    </div>
+  );
+};
 
-export default page
+export default page;
