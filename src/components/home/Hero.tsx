@@ -4,7 +4,7 @@ import { ArrowRight } from "lucide-react";
 
 const Hero = () => {
   return (
-    <div className="relative min-h-[calc(100vh-104px)] flex items-center justify-center overflow-hidden">
+    <div className="relative min-h-[calc(100vh)] flex items-center justify-center overflow-hidden">
       <video
         className="absolute top-0 left-0 w-full h-full object-cover"
         src="/hero.mp4"

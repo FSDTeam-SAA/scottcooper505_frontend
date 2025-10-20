@@ -1,9 +1,11 @@
 import Hero from "@/components/home/Hero";
+import OurService from "@/components/home/our-service";
 
 const page = () => {
   return (
-    <div>
+    <div className="space-y-10">
       <Hero />
+      <OurService />
     </div>
   );
 };
