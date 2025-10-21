@@ -1,6 +1,7 @@
 import Contact from "@/components/home/contact";
 import Hero from "@/components/home/Hero";
 import OurService from "@/components/home/our-service";
+import Testimonials from "@/components/home/testimonials";
 import { WhyChoose } from "@/components/home/why-choose";
 
 const page = () => {
@@ -10,6 +11,7 @@ const page = () => {
       <OurService />
       <Contact />
       <WhyChoose />
+      <Testimonials />
     </div>
   );
 };
