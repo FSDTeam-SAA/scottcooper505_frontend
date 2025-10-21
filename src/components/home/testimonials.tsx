@@ -60,7 +60,7 @@ const Testimonials = () => {
                 alt="img.png"
                 width={1000}
                 height={1000}
-                className="h-[205px] w-[150px] rounded-md"
+                className="object-cover h-full rounded-md"
               />
             </div>
 
