@@ -1,6 +1,7 @@
 import Contact from "@/components/home/contact";
 import Hero from "@/components/home/Hero";
 import OurService from "@/components/home/our-service";
+import { WhyChoose } from "@/components/home/why-choose";
 
 const page = () => {
   return (
@@ -8,6 +9,7 @@ const page = () => {
       <Hero />
       <OurService />
       <Contact />
+      <WhyChoose />
     </div>
   );
 };
