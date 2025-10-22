@@ -17,6 +17,6 @@ export const navLinks = [
     },
     {
         label: "Projects Page",
-        link: '/projects-page'
+        link: '/projects'
     }
 ]
