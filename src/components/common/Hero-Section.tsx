@@ -7,7 +7,7 @@ const HeroSection = ({
 }: {
   img: string;
   title: string;
-  desc: string;
+  desc: string | React.ReactNode;
 }) => {
   return (
     <div
