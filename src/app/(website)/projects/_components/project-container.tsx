@@ -1,6 +1,7 @@
 "use client";
 
 import ScottcooperDropdownSelector from "@/components/ui/ScottcooperDropdownSelector";
+import ScottcooperPagination from "@/components/ui/ScottcooperPagination";
 import { Funnel, MapPin, Tag, FileImage } from "lucide-react";
 import Image from "next/image";
 import React, { useState } from "react";
@@ -13,6 +14,7 @@ const projectTypeLists = [
 
 const ProjectContainer = () => {
   const [projectType, setProjectType] = useState<string>("");
+  const [currentPage, setCurrentPage] = useState<number>(1);
 
   const projectsData = [
     {
@@ -125,18 +127,18 @@ const ProjectContainer = () => {
           {projectsData?.map((project) => {
             return (
               <div key={project.id} className="pb-4 md:pb-6 lg:pb-8">
-              <div className="relative">
+                <div className="relative">
                   <Image
-                  src={project?.image}
-                  alt={project?.title}
-                  width={1000}
-                  height={1000}
-                  className="w-[496px] h-[356px] object-cover rounded-t-[16px]"
-                />
-                <span className="absolute top-4 right-4 bg-white p-3 rounded-full">
-                  <FileImage />
-                </span>
-              </div>
+                    src={project?.image}
+                    alt={project?.title}
+                    width={1000}
+                    height={1000}
+                    className="w-[496px] h-[356px] object-cover rounded-t-[16px]"
+                  />
+                  <span className="absolute top-4 right-4 bg-white p-3 rounded-full">
+                    <FileImage />
+                  </span>
+                </div>
                 <div className="bg-white rounded-b-[16px] pt-3 md:pt-4 px-4 md:px-5 lg:px-6 pb-4 md:pb-5 lg:pb-6">
                   <h4 className="text-lg md:text-xl lg:text-2xl font-semibold text-[#1D1A22] leading-[120%]">
                     {project?.title}
@@ -158,6 +160,21 @@ const ProjectContainer = () => {
               </div>
             );
           })}
+        </div>
+
+        {/* pagination here  */}
+        <div className="bg-transparent flex items-center justify-between pt-4 md:pt-6 lg:pt-8">
+          <p className="text-sm md:text-base font-medium leading-[120%]  text-[#3F3F3F]">
+            Showing {currentPage}
+            of 259 results
+          </p>
+          <div>
+            <ScottcooperPagination
+              totalPages={10}
+              currentPage={currentPage}
+              onPageChange={(page) => setCurrentPage(page)}
+            />
+          </div>
         </div>
       </div>
     </div>
