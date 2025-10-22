@@ -9,8 +9,8 @@ export const Footer = () => {
     <div className="pt-16 pb-5 bg-[#e7e7e7]">
       <div className="border-b border-gray-400/50 pb-5">
         <div className="container">
-          <div className="grid grid-cols-4 gap-14">
-            <div className="col-span-2">
+          <div className="grid grid-cols-1 lg:grid-cols-4 gap-14">
+            <div className="lg:col-span-2">
               {/* logo */}
               <Link href={"/"}>
                 <div>
@@ -37,7 +37,7 @@ export const Footer = () => {
               </div>
             </div>
 
-            <div className="col-span-1">
+            <div className="lg:col-span-1">
               <h1 className="font-medium text-xl mb-4">Contact Us</h1>
               <h1 className="flex items-center gap-2 hover:underline hover:text-primary transition-all cursor-pointer">
                 <Phone className="text-primary h-5 w-5" /> 731-592-1892
@@ -51,7 +51,7 @@ export const Footer = () => {
               </h1>
             </div>
 
-            <div className="col-span-1">
+            <div className="lg:col-span-1">
               <h1 className="font-medium text-xl mb-4">Quick Links</h1>
               <Link
                 href={"/services"}

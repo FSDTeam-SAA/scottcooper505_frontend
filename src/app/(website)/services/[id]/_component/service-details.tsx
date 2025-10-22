@@ -13,7 +13,7 @@ const ServiceDetails = () => {
   };
 
   return (
-    <div className="container flex items-start gap-16">
+    <div className="container flex flex-col lg:flex-row items-start gap-16">
       <div className="lg:w-[45%] overflow-hidden rounded-lg">
         <Image
           src={serviceDetails.serviceImg}

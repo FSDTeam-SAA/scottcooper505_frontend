@@ -140,12 +140,12 @@ const Page = () => {
             </div>
           </div>
 
-          <div className="lg:w-[40%] sticky top-32 self-start">
+          <div className="w-full lg:w-[40%] sticky top-32 self-start">
             <ContactUsForm />
           </div>
         </div>
 
-        <div className="mt-20">
+        <div className="mt-20 -z-10">
           <ServiceArea />
         </div>
       </div>
