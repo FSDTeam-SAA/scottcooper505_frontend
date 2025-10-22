@@ -1,10 +1,22 @@
-import React from 'react'
+import React from "react";
 
-const HeroSection = ({ img, title, desc }: { img: string; title: string; desc: string }) => {
+const HeroSection = ({
+  img,
+  title,
+  desc,
+}: {
+  img: string;
+  title: string;
+  desc: string;
+}) => {
   return (
     <div
-      style={{ backgroundImage: `url(${img})` }}
-      className="h-[528px] w-full bg-cover bg-center bg-no-repeat flex flex-col items-center justify-center text-center px-4"
+      style={{
+        backgroundImage: `url(${img})`,
+        backgroundAttachment: "fixed",
+        backgroundBlendMode: "overlay",
+      }}
+      className="h-[528px] w-full bg-cover bg-center bg-no-repeat flex flex-col items-center justify-center bg-[#00000098] text-center px-4"
     >
       <h1 className="text-2xl md:text-4xl lg:text-[48px] font-bold text-white leading-[120%]">
         {title}
@@ -13,7 +25,7 @@ const HeroSection = ({ img, title, desc }: { img: string; title: string; desc: s
         {desc}
       </p>
     </div>
-  )
-}
+  );
+};
 
-export default HeroSection
+export default HeroSection;
