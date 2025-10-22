@@ -60,7 +60,7 @@ export const AllService = () => {
   ];
 
   return (
-    <div className="container mt-16">
+    <div className="container mt-16 mb-24">
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
         {serviceInfo.map((service) => (
           <ServiceCard key={service._id} service={service} />

@@ -39,7 +39,7 @@ const Testimonials = () => {
   ];
 
   return (
-    <div className="container">
+    <div className="container !mb-24">
       <div className="text-center">
         <h1 className="text-3xl font-bold">Testimonials</h1>
         <p className="text-sm text-black/85 mt-2 lg:max-w-xs mx-auto mb-8">
