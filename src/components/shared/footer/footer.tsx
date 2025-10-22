@@ -6,7 +6,7 @@ import React from "react";
 
 export const Footer = () => {
   return (
-    <div className="py-20 bg-[#e7e7e7] mt-24">
+    <div className="pt-16 pb-5 bg-[#e7e7e7] mt-24">
       <div className="border-b border-gray-400/50 pb-5">
         <div className="container">
           <div className="grid grid-cols-4 gap-14">

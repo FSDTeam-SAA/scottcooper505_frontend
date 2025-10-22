@@ -59,7 +59,7 @@ const Navbar = () => {
                         p-2 px-4 rounded-3xl font-medium transition-all duration-500 
                         hover:bg-[#e7e7e7] 
                         ${isActive ? "bg-[#e7e7e7] text-primary" : ""}
-                        ${isAtTop && !isActive ? "text-white" : "text-primary"}
+                        ${pathname === "/" && isAtTop && !isActive ? "text-white" : "text-primary"}
                       `}
                     >
                       {item.label}
