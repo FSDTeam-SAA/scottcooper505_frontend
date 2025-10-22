@@ -12,7 +12,7 @@ const layout = ({
       <header>
         <Navbar />
       </header>
-      <main className="min-h-[calc(100vh-500px)]">{children}</main>
+      <main>{children}</main>
       <footer>
         <Footer />
       </footer>
