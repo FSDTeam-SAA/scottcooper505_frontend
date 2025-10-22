@@ -2,11 +2,12 @@ import Image from "next/image";
 import React from "react";
 import { Button } from "../ui/button";
 import { ArrowRight } from "lucide-react";
+import Link from "next/link";
 
 const ServiceCard = ({
   service,
 }: {
-  service: { serviceImg: string; title: string; desc: string };
+  service: { _id: number; serviceImg: string; title: string; desc: string };
 }) => {
   return (
     <div className="p-5 rounded-lg shadow-[0px_0px_60px_0px_#0000003D] group ">
@@ -16,7 +17,7 @@ const ServiceCard = ({
           alt="img.png"
           width={1000}
           height={1000}
-          className="w-[472px] h-[255px] rounded-lg group-hover:scale-110 transition-all duration-100"
+          className="w-[472px] h-[255px] rounded-lg group-hover:scale-110 transition-all duration-300"
         />
       </div>
 
@@ -24,9 +25,11 @@ const ServiceCard = ({
       <p className="text-sm text-black/75 mb-4">{service.desc}</p>
 
       <div className="flex items-center justify-between">
-        <Button>
-          Book Now <ArrowRight />
-        </Button>
+        <Link href={`/services/${service._id}`}>
+          <Button>
+            Book Now <ArrowRight />
+          </Button>
+        </Link>
 
         <Button variant="outline" className="text-primary">
           See Details
