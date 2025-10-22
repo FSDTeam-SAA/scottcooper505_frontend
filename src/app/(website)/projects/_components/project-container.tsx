@@ -15,7 +15,6 @@ const projectTypeLists = [
 const ProjectContainer = () => {
   const [projectType, setProjectType] = useState<string>("");
   const [currentPage, setCurrentPage] = useState<number>(1);
-
   const projectsData = [
     {
       id: 1,
@@ -24,6 +23,10 @@ const ProjectContainer = () => {
       desc: "A luxury apartment complex with 200 units featuring, modern, amenities, and sustainable",
       location: "New York",
       type: "Residential",
+      video: {
+        url: "/assets/videos/project1.mp4",
+        type: "video/mp4",
+      },
     },
     {
       id: 2,
@@ -32,6 +35,10 @@ const ProjectContainer = () => {
       desc: "A luxury apartment complex with 200 units featuring, modern, amenities, and sustainable",
       location: "New York",
       type: "Residential",
+       video: {
+        url: "/assets/videos/project1.mp4",
+        type: "video/mp4",
+      },
     },
     {
       id: 3,
@@ -40,6 +47,10 @@ const ProjectContainer = () => {
       desc: "A luxury apartment complex with 200 units featuring, modern, amenities, and sustainable",
       location: "New York",
       type: "Residential",
+       video: {
+        url: "/assets/videos/project1.mp4",
+        type: "video/mp4",
+      },
     },
     {
       id: 4,
@@ -48,6 +59,10 @@ const ProjectContainer = () => {
       desc: "A luxury apartment complex with 200 units featuring, modern, amenities, and sustainable",
       location: "New York",
       type: "Residential",
+       video: {
+        url: "/assets/videos/project1.mp4",
+        type: "video/mp4",
+      },
     },
     {
       id: 5,
@@ -56,6 +71,10 @@ const ProjectContainer = () => {
       desc: "A luxury apartment complex with 200 units featuring, modern, amenities, and sustainable",
       location: "New York",
       type: "Residential",
+       video: {
+        url: "/assets/videos/project1.mp4",
+        type: "video/mp4",
+      },
     },
     {
       id: 6,
@@ -64,6 +83,10 @@ const ProjectContainer = () => {
       desc: "A luxury apartment complex with 200 units featuring, modern, amenities, and sustainable",
       location: "New York",
       type: "Residential",
+       video: {
+        url: "/assets/videos/project1.mp4",
+        type: "video/mp4",
+      },
     },
     {
       id: 7,
@@ -72,6 +95,10 @@ const ProjectContainer = () => {
       desc: "A luxury apartment complex with 200 units featuring, modern, amenities, and sustainable",
       location: "New York",
       type: "Residential",
+       video: {
+        url: "/assets/videos/project1.mp4",
+        type: "video/mp4",
+      },
     },
     {
       id: 8,
@@ -80,6 +107,10 @@ const ProjectContainer = () => {
       desc: "A luxury apartment complex with 200 units featuring, modern, amenities, and sustainable",
       location: "New York",
       type: "Residential",
+       video: {
+        url: "/assets/videos/project1.mp4",
+        type: "video/mp4",
+      },
     },
     {
       id: 9,
@@ -88,6 +119,10 @@ const ProjectContainer = () => {
       desc: "A luxury apartment complex with 200 units featuring, modern, amenities, and sustainable",
       location: "New York",
       type: "Residential",
+       video: {
+        url: "/assets/videos/project1.mp4",
+        type: "video/mp4",
+      },
     },
   ];
 
@@ -127,7 +162,9 @@ const ProjectContainer = () => {
           {projectsData?.map((project) => {
             return (
               <div key={project.id} className="pb-4 md:pb-6 lg:pb-8">
-                <div className="relative">
+                <div
+                  className="relative cursor-pointer"
+                >
                   <Image
                     src={project?.image}
                     alt={project?.title}
@@ -158,6 +195,11 @@ const ProjectContainer = () => {
                   </p>
                 </div>
               </div>
+
+              //   <div key={project.id} className="pb-4 md:pb-6 lg:pb-8">
+              //    <ProjectCart key={project.id} projectData={project} />
+               
+              // </div>
             );
           })}
         </div>
@@ -170,13 +212,15 @@ const ProjectContainer = () => {
           </p>
           <div>
             <ScottcooperPagination
-              totalPages={10}
+              totalPages={3}
               currentPage={currentPage}
               onPageChange={(page) => setCurrentPage(page)}
             />
           </div>
         </div>
       </div>
+
+     
     </div>
   );
 };
