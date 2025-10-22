@@ -1,6 +1,7 @@
 import React from "react";
 import { Button } from "../ui/button";
 import { ArrowRight } from "lucide-react";
+import Link from "next/link";
 
 const Hero = () => {
   return (
@@ -25,9 +26,11 @@ const Hero = () => {
           excellence.
         </p>
 
-        <Button className="mt-5 px-5">
-          Book Now <ArrowRight />
-        </Button>
+        <Link href="/booking">
+          <Button className="mt-5 px-5">
+            Book Now <ArrowRight />
+          </Button>
+        </Link>
       </div>
     </div>
   );
