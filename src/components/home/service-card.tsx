@@ -16,7 +16,7 @@ const ServiceCard = ({
           alt="img.png"
           width={1000}
           height={1000}
-          className="w-[472px] h-[255px] rounded-lg group-hover:scale-110 transition-all duration-100"
+          className="w-[472px] h-[255px] rounded-lg group-hover:scale-110 transition-all duration-300"
         />
       </div>
 
