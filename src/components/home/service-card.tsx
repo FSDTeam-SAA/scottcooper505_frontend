@@ -25,15 +25,17 @@ const ServiceCard = ({
       <p className="text-sm text-black/75 mb-4">{service.desc}</p>
 
       <div className="flex items-center justify-between">
-        <Link href={`/services/${service._id}`}>
+        <Link href="/booking">
           <Button>
             Book Now <ArrowRight />
           </Button>
         </Link>
 
-        <Button variant="outline" className="text-primary">
-          See Details
-        </Button>
+        <Link href={`/services/${service._id}`}>
+          <Button variant="outline" className="text-primary">
+            See Details
+          </Button>
+        </Link>
       </div>
     </div>
   );
