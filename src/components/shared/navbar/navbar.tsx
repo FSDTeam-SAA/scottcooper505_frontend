@@ -27,7 +27,7 @@ const Navbar = () => {
   return (
     <div
       className={`fixed top-0 left-0 w-full z-50 transition-all duration-500 ${
-        isAtTop ? "bg-transparent" : "bg-white shadow-md"
+        pathname === "/" && isAtTop ? "bg-transparent" : "bg-white"
       }`}
     >
       <div className="container py-4">
