@@ -1,10 +1,10 @@
 import React from "react";
-import { BookingHistory } from "./_components/booking-history";
+import Settings from "./_components/settings";
 
 const page = () => {
   return (
     <div>
-      <BookingHistory />
+      <Settings />
     </div>
   );
 };

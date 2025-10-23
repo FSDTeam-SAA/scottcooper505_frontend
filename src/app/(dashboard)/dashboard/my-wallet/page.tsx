@@ -1,10 +1,10 @@
 import React from "react";
-import { BookingHistory } from "./_components/booking-history";
+import MyWallet from "./_components/my-wallet";
 
 const page = () => {
   return (
     <div>
-      <BookingHistory />
+      <MyWallet />
     </div>
   );
 };
