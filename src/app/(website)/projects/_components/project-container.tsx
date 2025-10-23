@@ -128,7 +128,7 @@ const ProjectContainer = () => {
 
   return (
     <div className="container mx-auto">
-      <div className="pt-8 md:pt-12 lg:pt-16">
+      <div className="py-8 md:py-12 lg:py-16">
         <h3 className="flex items-center gap-2 text-lg md:text-xl lg:text-2xl font-semibold text-[#1D1A22] leading-[120%]">
           <Funnel />
           Filter Projects
