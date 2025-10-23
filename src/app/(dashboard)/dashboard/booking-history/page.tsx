@@ -1,9 +1,12 @@
-import React from 'react'
+import React from "react";
+import { BookingHistory } from "./_components/booking-history";
 
 const page = () => {
   return (
-    <div>booking history</div>
-  )
-}
+    <div>
+      <BookingHistory />
+    </div>
+  );
+};
 
-export default page
+export default page;
