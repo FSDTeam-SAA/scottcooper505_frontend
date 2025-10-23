@@ -1,5 +1,6 @@
 "use client";
 import {
+  BadgeIndianRupee,
   CookingPot,
   HandPlatter,
   LayoutDashboard,
@@ -34,11 +35,15 @@ const items = [
     url: "/dashboard/services",
     icon: HandPlatter,
   },
-
   {
     title: "Booking History",
     url: "/dashboard/booking-history",
     icon: CookingPot,
+  },
+  {
+    title: "My Wallet",
+    url: "/dashboard/my-wallet",
+    icon: BadgeIndianRupee,
   },
   {
     title: "Settings",
