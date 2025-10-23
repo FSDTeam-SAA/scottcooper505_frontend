@@ -11,7 +11,7 @@ const AppTopBar = () => {
 
         <div>
           <Image
-            src={"/placeholder.jpg"}
+            src={"/placeholder.jpeg"}
             alt="placeholder.png"
             width={1000}
             height={1000}

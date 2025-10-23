@@ -53,7 +53,7 @@ const items = [
   },
   {
     title: "Settings",
-    url: "/settings",
+    url: "/dashboard/settings",
     icon: Settings,
   },
 ];
@@ -88,9 +88,9 @@ export function AppSidebar() {
                 return (
                   <SidebarMenuItem key={item.title}>
                     <SidebarMenuButton
-                      className={`font-medium hover:bg-primary hover:text-white ${
-                        isActive && "bg-primary text-white"
-                      } transition-all duration-200`}
+                      className={`font-medium hover:bg-gray-200 hover:text-primary ${
+                        isActive && "bg-primary text-white hover:bg-primary hover:text-white"
+                      } transition-all duration-200 `}
                       asChild
                     >
                       <Link href={item.url}>
