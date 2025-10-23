@@ -2,6 +2,7 @@
 import {
   BadgeIndianRupee,
   CookingPot,
+  FolderKanban,
   HandPlatter,
   LayoutDashboard,
   LogOut,
@@ -46,8 +47,13 @@ const items = [
     icon: BadgeIndianRupee,
   },
   {
+    title: "Projects",
+    url: "/dashboard/projects",
+    icon: FolderKanban,
+  },
+  {
     title: "Settings",
-    url: "#",
+    url: "/settings",
     icon: Settings,
   },
 ];
