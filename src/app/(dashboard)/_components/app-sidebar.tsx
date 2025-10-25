@@ -83,13 +83,18 @@ export function AppSidebar() {
           <SidebarGroupContent className="h-full flex flex-col justify-between">
             <SidebarMenu>
               {items.map((item) => {
-                const isActive = pathName === item.url;
+                const isActive =
+                  item.url === "/dashboard"
+                    ? pathName === "/dashboard"
+                    : pathName === item.url ||
+                      pathName.startsWith(`${item.url}/`);
 
                 return (
                   <SidebarMenuItem key={item.title}>
                     <SidebarMenuButton
                       className={`font-medium hover:bg-gray-200 hover:text-primary ${
-                        isActive && "bg-primary text-white hover:bg-primary hover:text-white"
+                        isActive &&
+                        "bg-primary text-white hover:bg-primary hover:text-white"
                       } transition-all duration-200 `}
                       asChild
                     >

@@ -5,6 +5,7 @@ import ProjectsTable from "./projects-table";
 import ScottcooperPagination from "@/components/ui/ScottcooperPagination";
 import { Button } from "@/components/ui/button";
 import { Plus } from "lucide-react";
+import Link from "next/link";
 
 const Projects = () => {
   const [currentPage, setCurrentPage] = useState(1);
@@ -14,9 +15,11 @@ const Projects = () => {
       <div className="flex items-center justify-between">
         <PathTracker />
 
-        <Button>
-          <Plus /> Add Project
-        </Button>
+        <Link href={'/dashboard/projects/add-project'}>
+          <Button>
+            <Plus /> Add Project
+          </Button>
+        </Link>
       </div>
 
       <div>
