@@ -87,6 +87,7 @@ export function useChnagePassword(
     onSuccess: (data) => {
       toast.success(data?.message || "Password updated successfully");
       if (onSuccessCallback) onSuccessCallback();
+      
     },
     onError: (error) => {
       if (error instanceof Error) toast.error(error.message || "Update failed");
