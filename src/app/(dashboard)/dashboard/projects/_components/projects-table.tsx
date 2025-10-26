@@ -1,3 +1,5 @@
+"use client";
+
 import {
   Table,
   TableBody,
@@ -7,9 +9,24 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { Edit, Trash } from "lucide-react";
-import React from "react";
+import { Skeleton } from "@/components/ui/skeleton";
+import { getTruncatedText } from "@/utils/getTruncatedText";
 
-const ProjectsTable = () => {
+interface PropertiesType {
+  _id: string;
+  title: string;
+  description: string;
+  createdAt: string;
+}
+
+interface Props {
+  properties: PropertiesType[];
+  isLoading: boolean;
+}
+
+const ProjectsTable = ({ properties, isLoading }: Props) => {
+  const skeletonRows = Array.from({ length: 5 });
+
   return (
     <div>
       <Table className="lg:table-fixed lg:w-full">
@@ -26,29 +43,51 @@ const ProjectsTable = () => {
         </TableHeader>
 
         <TableBody className="text-center">
-          <TableRow className="border-b border-gray-300 ">
-            <TableCell className="lg:max-w-lg">
-              <h1 className="font-semibold">
-                Lorem ipsum dolor sit consectetur elit
-              </h1>
-              <p className="lg:max-w-md opacity-75 mt-1">
-                t is a long established fact that a reader will be distracted by
-                the readable content of a page when looking at its layout. The
-                point of using Lorem Ipsum is that it{" "}
-              </p>
-            </TableCell>
-            <TableCell>04/21/2025 03:18pm</TableCell>
-            <TableCell>
-              <div className="opacity-60 space-x-2">
-                <button>
-                  <Edit className="h-5 w-5" />
-                </button>
-                <button>
-                  <Trash className="h-5 w-5" />
-                </button>
-              </div>
-            </TableCell>
-          </TableRow>
+          {isLoading
+            ? skeletonRows.map((_, idx) => (
+                <TableRow key={idx} className="border-b border-gray-300">
+                  <TableCell className="lg:max-w-lg">
+                    <Skeleton className="h-5 w-32 mx-auto" />
+                    <Skeleton className="h-3 w-48 mt-2 mx-auto" />
+                  </TableCell>
+                  <TableCell>
+                    <Skeleton className="h-5 w-24 mx-auto" />
+                    <Skeleton className="h-5 w-24 mt-1 mx-auto" />
+                  </TableCell>
+                  <TableCell>
+                    <div className="flex justify-center gap-2">
+                      <Skeleton className="h-5 w-5" />
+                      <Skeleton className="h-5 w-5" />
+                    </div>
+                  </TableCell>
+                </TableRow>
+              ))
+            : properties?.map((item) => (
+                <TableRow key={item._id} className="border-b border-gray-300 ">
+                  <TableCell className="lg:max-w-lg">
+                    <h1 className="font-semibold">{item?.title}</h1>
+                    <p className="lg:max-w-md opacity-75 mt-1">
+                      {getTruncatedText(item?.description, 200)}
+                    </p>
+                  </TableCell>
+                  <TableCell>
+                    <div className="flex items-center justify-center gap-1">
+                      <p>{new Date(item?.createdAt)?.toLocaleDateString()}</p>
+                      <p>{new Date(item?.createdAt)?.toLocaleTimeString()}</p>
+                    </div>
+                  </TableCell>
+                  <TableCell>
+                    <div className="opacity-60 space-x-2">
+                      <button>
+                        <Edit className="h-5 w-5" />
+                      </button>
+                      <button>
+                        <Trash className="h-5 w-5" />
+                      </button>
+                    </div>
+                  </TableCell>
+                </TableRow>
+              ))}
         </TableBody>
       </Table>
     </div>

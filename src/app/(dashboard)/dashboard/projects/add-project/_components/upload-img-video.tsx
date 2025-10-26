@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 import { FileVideoCamera, ImageUp, X } from "lucide-react";
 import Image from "next/image";
 import { UseFormReturn } from "react-hook-form";
-import { ProjectFormValues } from "./add-project";
+import { ProjectFormValues } from "./add-edit-project";
 import {
   FormControl,
   FormField,
