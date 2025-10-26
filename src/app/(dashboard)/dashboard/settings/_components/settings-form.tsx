@@ -22,15 +22,33 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { CalendarIcon } from "lucide-react";
-import React, { useState } from "react";
+import { CalendarIcon, Save, X } from "lucide-react";
+import React, { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import z from "zod";
 import { cn } from "@/lib/utils"; // You might need to import this utility
 
+enum Gender {
+  Male = "male",
+  Female = "female",
+}
+
+interface ProfileType {
+  name: string;
+  email: string;
+  gender: Gender;
+  phoneNumber: string;
+  birthDate: string;
+  address: string;
+  profileImage: string;
+}
+
+interface Props {
+  profileInfo: ProfileType;
+}
+
 const formSchema = z.object({
-  fullName: z.string(),
-  username: z.string().min(2).max(50),
+  name: z.string(),
   phoneNumber: z.string(),
   gender: z.enum(["male", "female"]),
   birthDate: z.string(),
@@ -50,21 +68,30 @@ function formatDate(date: Date | undefined) {
   });
 }
 
-export const SettingsForm = () => {
+export const SettingsForm = ({ profileInfo }: Props) => {
   const [open, setOpen] = useState(false);
   const [date, setDate] = useState<Date | undefined>(new Date("2025-06-01"));
 
   const form = useForm<formValue>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      fullName: "",
-      username: "",
+      name: "",
       phoneNumber: "",
       gender: "male",
       birthDate: "",
       address: "",
     },
   });
+
+  useEffect(() => {
+    form.reset({
+      name: profileInfo?.name || "",
+      gender: profileInfo?.gender || "",
+      birthDate: profileInfo?.birthDate || "",
+      address: profileInfo?.address || "",
+      phoneNumber: profileInfo?.phoneNumber || "",
+    });
+  }, [form, profileInfo]);
 
   const onSubmit = (value: formValue) => {
     console.log("value: ", value);
@@ -74,32 +101,17 @@ export const SettingsForm = () => {
     <div>
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)}>
-          <div className="lg:flex items-center w-full gap-8">
+          <div>
             {/* fullname field */}
-            <div className="lg:w-1/2">
+            <div>
               <FormField
                 control={form.control}
-                name="fullName"
+                name="name"
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel>Full Name</FormLabel>
                     <FormControl>
                       <Input {...field} placeholder="Enter your full name" />
-                    </FormControl>
-                  </FormItem>
-                )}
-              />
-            </div>
-
-            <div className="lg:w-1/2">
-              <FormField
-                control={form.control}
-                name="username"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>User Name</FormLabel>
-                    <FormControl>
-                      <Input placeholder="Enter user name" {...field} />
                     </FormControl>
                   </FormItem>
                 )}
@@ -207,6 +219,17 @@ export const SettingsForm = () => {
                   </FormItem>
                 )}
               />
+            </div>
+          </div>
+
+          <div className="flex items-center justify-end mt-8">
+            <div className="space-x-5">
+              <Button variant="outline">
+                <X /> Cancel
+              </Button>
+              <Button>
+                <Save /> Save
+              </Button>
             </div>
           </div>
         </form>
