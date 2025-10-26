@@ -17,7 +17,7 @@ const layout = ({ children }: { children: React.ReactNode }) => {
           <header className="bg-white">
             <AppTopBar />
           </header>
-          <div className="w-full p-5">
+          <div className="w-full">
             <div>{children}</div>
           </div>
         </main>

@@ -3,7 +3,7 @@ import { BookingHistory } from "./_components/booking-history";
 
 const page = () => {
   return (
-    <div>
+    <div className=" p-5">
       <BookingHistory />
     </div>
   );

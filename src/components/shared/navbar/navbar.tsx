@@ -70,7 +70,7 @@ const Navbar = () => {
                         hover:bg-[#e7e7e7] 
                         ${isActive ? "bg-[#e7e7e7] text-primary" : ""}
                         ${pathname === "/" && isAtTop && !isActive
-                          ? "text-white"
+                          ? "text-primary"
                           : "text-primary"
                         }
                       `}
