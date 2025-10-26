@@ -8,7 +8,7 @@ export async function middleware(request: NextRequest) {
     });
   
 
-    if (!token || token?.role !== "admin") {
+    if (!token || token?.role !== "ADMIN") {
         return NextResponse.redirect(new URL("/login", request.url));
     }
   
