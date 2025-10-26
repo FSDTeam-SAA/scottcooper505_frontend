@@ -8,9 +8,10 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { Edit, Trash } from "lucide-react";
+import { Edit } from "lucide-react";
 import { Skeleton } from "@/components/ui/skeleton";
 import { getTruncatedText } from "@/utils/getTruncatedText";
+import DeleteProject from "./delete-project";
 
 interface PropertiesType {
   _id: string;
@@ -81,9 +82,7 @@ const ProjectsTable = ({ properties, isLoading }: Props) => {
                       <button>
                         <Edit className="h-5 w-5" />
                       </button>
-                      <button>
-                        <Trash className="h-5 w-5" />
-                      </button>
+                      <DeleteProject id={item?._id} />
                     </div>
                   </TableCell>
                 </TableRow>
