@@ -16,7 +16,7 @@ import React, { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import Logo from "./logo";
-import { Eye, EyeOff } from "lucide-react";
+import { Eye, EyeOff, Loader2 } from "lucide-react";
 import { signIn } from "next-auth/react";
 import { toast } from "sonner";
 
@@ -183,7 +183,7 @@ const LoginForm = () => {
                 disabled={isLoading}
                 className="w-full text-white font-semibold py-2 h-auto"
               >
-                {isLoading ? "Logging in..." : "Login"}
+                Login {isLoading && <Loader2 className="animate-spin ml-2" />}
               </Button>
             </form>
           </Form>

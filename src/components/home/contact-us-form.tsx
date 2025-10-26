@@ -38,7 +38,6 @@ export function ContactUsForm() {
       message: values.message
     }
     contactMutation.mutate(payload)
-    // Handle form submission here
   }
 
   return (
