@@ -27,6 +27,7 @@ import React, { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import z from "zod";
 import { cn } from "@/lib/utils"; // You might need to import this utility
+import { useSettingsStore } from "@/zustand/settingsStore";
 
 enum Gender {
   Male = "male",
@@ -70,6 +71,7 @@ function formatDate(date: Date | undefined) {
 
 export const SettingsForm = ({ profileInfo }: Props) => {
   const [open, setOpen] = useState(false);
+  const { showSubmit, setShowSubmit } = useSettingsStore();
   const [date, setDate] = useState<Date | undefined>(new Date("2025-06-01"));
 
   const form = useForm<formValue>({
@@ -111,7 +113,7 @@ export const SettingsForm = ({ profileInfo }: Props) => {
                   <FormItem>
                     <FormLabel>Full Name</FormLabel>
                     <FormControl>
-                      <Input {...field} placeholder="Enter your full name" />
+                      <Input {...field} disabled={showSubmit === false} placeholder="Enter your full name" />
                     </FormControl>
                   </FormItem>
                 )}
@@ -128,7 +130,7 @@ export const SettingsForm = ({ profileInfo }: Props) => {
                   <FormItem>
                     <FormLabel>Phone Number</FormLabel>
                     <FormControl>
-                      <Input {...field} placeholder="Enter your phone number" />
+                      <Input {...field} disabled={showSubmit === false} placeholder="Enter your phone number" />
                     </FormControl>
                   </FormItem>
                 )}
@@ -146,6 +148,7 @@ export const SettingsForm = ({ profileInfo }: Props) => {
                       <Select
                         onValueChange={field.onChange}
                         defaultValue={field.value}
+                        disabled={showSubmit === false}
                       >
                         <SelectTrigger>
                           <SelectValue placeholder="Select gender" />
@@ -171,7 +174,7 @@ export const SettingsForm = ({ profileInfo }: Props) => {
                   <FormItem className="flex flex-col">
                     <FormLabel>Date of Birth</FormLabel>
                     <Popover open={open} onOpenChange={setOpen}>
-                      <PopoverTrigger asChild>
+                      <PopoverTrigger disabled={showSubmit === false} className="disabled:cursor-not-allowed" asChild>
                         <FormControl>
                           <Button
                             variant="outline"
@@ -214,7 +217,7 @@ export const SettingsForm = ({ profileInfo }: Props) => {
                   <FormItem>
                     <FormLabel>Address</FormLabel>
                     <FormControl>
-                      <Input placeholder="Enter your address" {...field} />
+                      <Input disabled={showSubmit === false} placeholder="Enter your address" {...field} />
                     </FormControl>
                   </FormItem>
                 )}
@@ -222,16 +225,22 @@ export const SettingsForm = ({ profileInfo }: Props) => {
             </div>
           </div>
 
-          <div className="flex items-center justify-end mt-8">
-            <div className="space-x-5">
-              <Button variant="outline">
-                <X /> Cancel
-              </Button>
-              <Button>
-                <Save /> Save
-              </Button>
+          {showSubmit && (
+            <div className="flex items-center justify-end mt-8">
+              <div className="space-x-5">
+                <Button
+                  variant="outline"
+                  type="button"
+                  onClick={() => setShowSubmit(false)}
+                >
+                  <X /> Cancel
+                </Button>
+                <Button type="submit">
+                  <Save /> Save
+                </Button>
+              </div>
             </div>
-          </div>
+          )}
         </form>
       </Form>
     </div>

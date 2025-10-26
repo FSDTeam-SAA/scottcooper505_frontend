@@ -4,6 +4,7 @@ import { SettingsHeader } from "./settings-header";
 import { SettingsForm } from "./settings-form";
 import { useQuery } from "@tanstack/react-query";
 import { useSession } from "next-auth/react";
+import ChangePassword from "./change-password";
 
 const Settings = () => {
   const session = useSession();
@@ -32,6 +33,7 @@ const Settings = () => {
     <div className="space-y-8">
       <SettingsHeader profileInfo={profileInfo} isLoading={isLoading} />
       <SettingsForm profileInfo={profileInfo} />
+      <ChangePassword />
     </div>
   );
 };

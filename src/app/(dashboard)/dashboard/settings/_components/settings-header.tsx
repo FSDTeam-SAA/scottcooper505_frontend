@@ -1,8 +1,10 @@
+"use client";
 import { Button } from "@/components/ui/button";
 import { Edit } from "lucide-react";
 import Image from "next/image";
 import React from "react";
 import { Skeleton } from "@/components/ui/skeleton";
+import { useSettingsStore } from "@/zustand/settingsStore";
 
 interface ProfileType {
   name: string;
@@ -16,6 +18,8 @@ interface Props {
 }
 
 export const SettingsHeader = ({ profileInfo, isLoading }: Props) => {
+  const { setShowSubmit } = useSettingsStore();
+
   if (isLoading) {
     return (
       <div className="flex items-center justify-between">
@@ -55,11 +59,10 @@ export const SettingsHeader = ({ profileInfo, isLoading }: Props) => {
       </div>
 
       <div>
-        <Button>
+        <Button onClick={() => setShowSubmit(true)}>
           <Edit className="mr-2 h-4 w-4" /> Update Profile
         </Button>
       </div>
     </div>
   );
 };
-  
