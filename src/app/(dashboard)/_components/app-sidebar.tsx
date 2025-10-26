@@ -7,6 +7,7 @@ import {
   LayoutDashboard,
   LogOut,
   Settings,
+  Users,
 } from "lucide-react";
 
 import {
@@ -50,6 +51,11 @@ const items = [
     title: "Projects",
     url: "/dashboard/projects",
     icon: FolderKanban,
+  },
+  {
+    title: "Users Profile",
+    url: "/dashboard/users-profile",
+    icon: Users,
   },
   {
     title: "Settings",
