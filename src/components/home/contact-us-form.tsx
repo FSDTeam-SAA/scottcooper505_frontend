@@ -7,13 +7,15 @@ import { Button } from "@/components/ui/button"
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form"
 import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea"
-import { Search, Lock } from "lucide-react"
+import { Search, Lock, Loader2 } from "lucide-react"
 import { contactUsSchema } from "@/schema/contactUsSchema"
+import { useCreateContact } from "@/hooks/APiCalling"
 
 
 type FormValues = z.infer<typeof contactUsSchema>
 
 export function ContactUsForm() {
+  const contactMutation = useCreateContact()
   const form = useForm<FormValues>({
     resolver: zodResolver(contactUsSchema),
     defaultValues: {
@@ -27,7 +29,15 @@ export function ContactUsForm() {
   })
 
   function onSubmit(values: FormValues) {
-    console.log(values)
+    const payload = {
+      name: values.name,
+      email: values.email,
+      address: values.address,
+      phoneNumber: values.phone,
+      subject: values.subject,
+      message: values.message
+    }
+    contactMutation.mutate(payload)
     // Handle form submission here
   }
 
@@ -161,7 +171,7 @@ export function ContactUsForm() {
             type="submit"
             className="w-full h-12 text-white font-semibold text-lg rounded-lg"
           >
-            Send
+            Send  {contactMutation.isPending && <Loader2 className="animate-spin ml-2" />}
           </Button>
         </form>
       </Form>
