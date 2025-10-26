@@ -1,8 +1,13 @@
+"use client";
 import Image from "next/image"
 import { Card, CardContent } from "@/components/ui/card"
 import { Award, CheckCircle, Shield, Users } from "lucide-react"
+import { useSession } from "next-auth/react";
 
 export default function AboutPage() {
+  const session = useSession();
+  
+  console.log(session)
   return (
     <main className="min-h-screen bg-white">
       {/* Our Story Section */}

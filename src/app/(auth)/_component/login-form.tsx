@@ -12,23 +12,29 @@ import {
 import { Input } from "@/components/ui/input";
 import { zodResolver } from "@hookform/resolvers/zod";
 import Link from "next/link";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
-import z from "zod";
+import { z } from "zod";
 import Logo from "./logo";
-import { loginSchema } from "@/schema/loginSchema";
 import { Eye, EyeOff } from "lucide-react";
+import { signIn } from "next-auth/react";
+import { toast } from "sonner";
 
-const formSchema = loginSchema;
+const loginSchema = z.object({
+  email: z.string().email("Please enter a valid email address"),
+  password: z.string().min(1, "Password is required"),
+  rememberMe: z.boolean().default(false),
+});
 
-type FormValues = z.input<typeof formSchema>;
+type FormValues = z.infer<typeof loginSchema>;
 
 const LoginForm = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
 
   const form = useForm<FormValues>({
-    resolver: zodResolver(formSchema),
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    resolver: zodResolver(loginSchema) as any,
     defaultValues: {
       email: "",
       password: "",
@@ -36,11 +42,37 @@ const LoginForm = () => {
     },
   });
 
+  useEffect(() => {
+    const savedEmail = localStorage.getItem("rememberEmail");
+    const savedPassword = localStorage.getItem("rememberPassword");
+    const remember = localStorage.getItem("rememberMe") === "true";
+
+    if (remember && savedEmail && savedPassword) {
+      form.setValue("email", savedEmail);
+      form.setValue("password", savedPassword);
+      form.setValue("rememberMe", true);
+    }
+  }, [form]);
+
   async function onSubmit(values: FormValues) {
-    setIsLoading(true);
     try {
-      // Handle login logic here
-      console.log("Form values:", values);
+      setIsLoading(true);
+      const res = await signIn("credentials", {
+        email: values?.email,
+        password: values?.password,
+        redirect: false,
+      });
+
+      if (res?.error) {
+        toast.error(res.error);
+        return;
+      }
+
+      toast.success("Login successful!");
+      document.location.href = "/";
+    } catch (error) {
+      console.error("Login failed:", error);
+      toast.error((error as Error).message || "Something went wrong");
     } finally {
       setIsLoading(false);
     }
@@ -63,7 +95,7 @@ const LoginForm = () => {
 
           <Form {...form}>
             <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
-              {/* Email Field */}
+              {/* Email */}
               <FormField
                 control={form.control}
                 name="email"
@@ -82,7 +114,7 @@ const LoginForm = () => {
                 )}
               />
 
-              {/* Password Field */}
+              {/* Password */}
               <FormField
                 control={form.control}
                 name="password"
@@ -116,7 +148,7 @@ const LoginForm = () => {
                 )}
               />
 
-              {/* Remember Me & Forgot Password */}
+              {/* Remember Me */}
               <div className="flex items-center justify-between">
                 <FormField
                   control={form.control}
@@ -130,13 +162,13 @@ const LoginForm = () => {
                           className="mt-1"
                         />
                       </FormControl>
-
                       <FormLabel className="font-normal cursor-pointer">
                         Remember Me
                       </FormLabel>
                     </FormItem>
                   )}
                 />
+
                 <Link
                   href="/forgot-password"
                   className="text-sm text-foreground hover:underline hover:text-primary"
@@ -145,7 +177,7 @@ const LoginForm = () => {
                 </Link>
               </div>
 
-              {/* Login Button */}
+              {/* Submit */}
               <Button
                 type="submit"
                 disabled={isLoading}
@@ -156,7 +188,6 @@ const LoginForm = () => {
             </form>
           </Form>
 
-          {/* Sign Up Link */}
           <div className="text-center mt-4">
             <p className="text-sm text-muted-foreground">
               Don&apos;t have an account?{" "}
