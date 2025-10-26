@@ -3,7 +3,7 @@ import Settings from "./_components/settings";
 
 const page = () => {
   return (
-    <div>
+    <div className=" p-5">
       <Settings />
     </div>
   );

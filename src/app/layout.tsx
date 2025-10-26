@@ -24,8 +24,8 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={`${manrope.className} antialiased bg-[#f4f4f4]`}>
-        <Toaster/>
         <AppProvider>{children}</AppProvider>
+        <Toaster />
       </body>
     </html>
   );

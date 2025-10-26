@@ -17,7 +17,10 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import Link from "next/link";
-import { Eye, EyeOff } from "lucide-react";
+import { Eye, EyeOff, Loader2 } from "lucide-react";
+import { useMutation } from "@tanstack/react-query";
+import { toast } from "sonner";
+import { useRouter } from "next/navigation";
 
 const formSchema = signUpSchema;
 
@@ -26,7 +29,7 @@ type FormValues = z.input<typeof formSchema>;
 const SignUpForm = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
-
+  const router = useRouter()
   const form = useForm<FormValues>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -35,13 +38,43 @@ const SignUpForm = () => {
       phoneNumber: "",
       password: "",
       confirmPassword: "",
-      termCondition: false,
+      termCondition: false ,
     },
   });
 
-  async function onSubmit(values: FormValues) {
-    console.log("Form values:", values);
+
+  const { mutate, isPending } = useMutation({
+    mutationKey: ["sign-up"],
+    mutationFn: (values: { name: string; email: string; password: string }) =>
+      fetch(`${process.env.NEXT_PUBLIC_API_URL}/auth/register`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(values),
+      }).then((res) => res.json()),
+    onSuccess: (data) => {
+      if (!data?.success) {
+        toast.error(data?.message || "Something went wrong");
+        return;
+      }
+      toast.success(data?.message || "Account created successfully!");
+      form.reset();
+      router.push("/login");
+    },
+  });
+
+  // 2. Define a submit handler.
+  function onSubmit(values: z.infer<typeof formSchema>) {
+    const payload = {
+      name: values.name,
+      email: values.email,
+      password: values.password,
+      phoneNumber: values.phoneNumber,
+    };
+    mutate(payload);
   }
+
 
   const togglePasswordVisibility = () => {
     setShowPassword(!showPassword);
@@ -222,7 +255,7 @@ const SignUpForm = () => {
                 // disabled={isLoading}
                 className="w-full text-white font-semibold py-2 h-auto"
               >
-                Sign Up
+                Sign Up {isPending && <Loader2 className="animate-spin" />}
               </Button>
             </form>
           </Form>
@@ -235,7 +268,7 @@ const SignUpForm = () => {
                 href="/login"
                 className="text-foreground font-semibold hover:underline hover:text-primary"
               >
-                Sign In
+                Sign In 
               </Link>
             </p>
           </div>
