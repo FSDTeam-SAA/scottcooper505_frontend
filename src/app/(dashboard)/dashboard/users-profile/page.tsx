@@ -3,7 +3,7 @@ import UserProfileContainer from "./_components/user-profile-container";
 
 const UserProfilePage = () => {
   return (
-    <div>
+    <div className="p-5">
       <UserProfileContainer />
     </div>
   );
