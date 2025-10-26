@@ -1,9 +1,9 @@
-import { AddProject } from "./_components/add-project";
+import { AddEditProject } from "./_components/add-edit-project";
 
 const page = () => {
   return (
     <div>
-      <AddProject />
+      <AddEditProject />
     </div>
   );
 };

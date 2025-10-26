@@ -16,7 +16,7 @@ import { useSession } from "next-auth/react";
 
 export type ProjectFormValues = z.input<typeof projectFormSchema>;
 
-export const AddProject = () => {
+export const AddEditProject = () => {
   const session = useSession();
   const token = (session?.data?.user as { accessToken: string })?.accessToken;
 

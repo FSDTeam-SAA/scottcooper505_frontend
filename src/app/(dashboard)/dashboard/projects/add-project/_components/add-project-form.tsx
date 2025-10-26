@@ -8,7 +8,7 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { UseFormReturn } from "react-hook-form";
-import { ProjectFormValues } from "./add-project";
+import { ProjectFormValues } from "./add-edit-project";
 import { Input } from "@/components/ui/input";
 import { RichTextEditor } from "./RichTextEditor";
 import UploadImgVideo from "./upload-img-video";
