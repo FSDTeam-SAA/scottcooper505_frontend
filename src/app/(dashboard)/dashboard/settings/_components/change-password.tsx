@@ -11,9 +11,12 @@ import {
 import { Input } from "@/components/ui/input";
 import { useSettingsStore } from "@/zustand/settingsStore";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Save, X, Eye, EyeOff } from "lucide-react";
+import { useMutation } from "@tanstack/react-query";
+import { Save, X, Eye, EyeOff, Loader2 } from "lucide-react";
+import { useSession } from "next-auth/react";
 import React, { useState } from "react";
 import { useForm } from "react-hook-form";
+import { toast } from "sonner";
 import z from "zod";
 
 const formSchema = z
@@ -31,6 +34,8 @@ type formValue = z.infer<typeof formSchema>;
 
 const ChangePassword = () => {
   const { showSubmit, setShowSubmit } = useSettingsStore();
+  const session = useSession();
+  const token = (session?.data?.user as { accessToken: string })?.accessToken;
 
   const form = useForm<formValue>({
     resolver: zodResolver(formSchema),
@@ -45,10 +50,6 @@ const ChangePassword = () => {
   const [showNewPassword, setShowNewPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
-  const onSubmit = (value: formValue) => {
-    console.log("value: ", value);
-  };
-
   const togglePasswordVisibility = (field: "old" | "new" | "confirm") => {
     switch (field) {
       case "old":
@@ -60,6 +61,45 @@ const ChangePassword = () => {
       case "confirm":
         setShowConfirmPassword(!showConfirmPassword);
         break;
+    }
+  };
+
+  const { mutateAsync, isPending } = useMutation({
+    mutationKey: ["update-password"],
+    mutationFn: async (payload: formValue) => {
+      const res = await fetch(
+        `${process.env.NEXT_PUBLIC_API_URL}/auth/change-password`,
+        {
+          method: "POST",
+          headers: {
+            "content-type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+          body: JSON.stringify(payload),
+        }
+      );
+
+      if (!res.ok) {
+        throw new Error("Failed to change password!");
+      }
+
+      const data = await res.json();
+      return data;
+    },
+    onSuccess: (data) => {
+      toast.success(data.message);
+      form.reset();
+    },
+    onError: (error) => {
+      toast.error(error.message);
+    },
+  });
+
+  const onSubmit = async (value: formValue) => {
+    try {
+      await mutateAsync(value);
+    } catch (error) {
+      console.log(`error form update password : ${error}`);
     }
   };
 
@@ -190,7 +230,15 @@ const ChangePassword = () => {
                   <X /> Cancel
                 </Button>
                 <Button type="submit">
-                  <Save /> Save
+                  {isPending ? (
+                    <div className="flex items-center gap-2">
+                      <Loader2 className="animate-spin" /> Save
+                    </div>
+                  ) : (
+                    <div className="flex items-center gap-2">
+                      <Save /> Save
+                    </div>
+                  )}
                 </Button>
               </div>
             </div>

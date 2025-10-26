@@ -113,7 +113,11 @@ export const SettingsForm = ({ profileInfo }: Props) => {
                   <FormItem>
                     <FormLabel>Full Name</FormLabel>
                     <FormControl>
-                      <Input {...field} disabled={showSubmit === false} placeholder="Enter your full name" />
+                      <Input
+                        {...field}
+                        disabled={showSubmit === false}
+                        placeholder="Enter your full name"
+                      />
                     </FormControl>
                   </FormItem>
                 )}
@@ -130,7 +134,11 @@ export const SettingsForm = ({ profileInfo }: Props) => {
                   <FormItem>
                     <FormLabel>Phone Number</FormLabel>
                     <FormControl>
-                      <Input {...field} disabled={showSubmit === false} placeholder="Enter your phone number" />
+                      <Input
+                        {...field}
+                        disabled={showSubmit === false}
+                        placeholder="Enter your phone number"
+                      />
                     </FormControl>
                   </FormItem>
                 )}
@@ -174,7 +182,11 @@ export const SettingsForm = ({ profileInfo }: Props) => {
                   <FormItem className="flex flex-col">
                     <FormLabel>Date of Birth</FormLabel>
                     <Popover open={open} onOpenChange={setOpen}>
-                      <PopoverTrigger disabled={showSubmit === false} className="disabled:cursor-not-allowed" asChild>
+                      <PopoverTrigger
+                        disabled={showSubmit === false}
+                        className="disabled:cursor-not-allowed"
+                        asChild
+                      >
                         <FormControl>
                           <Button
                             variant="outline"
@@ -217,7 +229,11 @@ export const SettingsForm = ({ profileInfo }: Props) => {
                   <FormItem>
                     <FormLabel>Address</FormLabel>
                     <FormControl>
-                      <Input disabled={showSubmit === false} placeholder="Enter your address" {...field} />
+                      <Input
+                        disabled={showSubmit === false}
+                        placeholder="Enter your address"
+                        {...field}
+                      />
                     </FormControl>
                   </FormItem>
                 )}
