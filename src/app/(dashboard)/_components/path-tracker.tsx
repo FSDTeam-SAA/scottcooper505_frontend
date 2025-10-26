@@ -1,4 +1,3 @@
-
 "use client";
 
 import { usePathname } from "next/navigation";
@@ -20,10 +19,18 @@ const PathTracker = () => {
   const pathname = usePathname();
   const segments = pathname.split("/").filter(Boolean);
 
+  const isEditPage = pathname.startsWith("/dashboard/projects/edit-project/");
+
   return (
     <div className="text-xl">
       <div>
-        <h1 className="font-semibold">{segments.length ? capitalize(segments[segments.length - 1]) : "Home"}</h1>
+        <h1 className="font-semibold">
+          {isEditPage
+            ? "Edit Project"
+            : segments.length
+            ? capitalize(segments[segments.length - 1])
+            : "Home"}
+        </h1>
       </div>
 
       <div>
@@ -39,15 +46,18 @@ const PathTracker = () => {
               const href = "/" + segments.slice(0, index + 1).join("/");
               const isLast = index === segments.length - 1;
 
+              const displaySegment =
+                isEditPage && isLast ? "" : capitalize(segment);
+
               return (
                 <Fragment key={index}>
                   <BreadcrumbSeparator />
                   <BreadcrumbItem>
                     {isLast ? (
-                      <BreadcrumbPage>{capitalize(segment)}</BreadcrumbPage>
+                      <BreadcrumbPage>{displaySegment}</BreadcrumbPage>
                     ) : (
                       <BreadcrumbLink asChild>
-                        <Link href={href}>{capitalize(segment)}</Link>
+                        <Link href={href}>{displaySegment}</Link>
                       </BreadcrumbLink>
                     )}
                   </BreadcrumbItem>

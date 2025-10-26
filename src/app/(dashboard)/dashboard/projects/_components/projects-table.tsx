@@ -12,6 +12,7 @@ import { Edit } from "lucide-react";
 import { Skeleton } from "@/components/ui/skeleton";
 import { getTruncatedText } from "@/utils/getTruncatedText";
 import DeleteProject from "./delete-project";
+import Link from "next/link";
 
 interface PropertiesType {
   _id: string;
@@ -79,9 +80,11 @@ const ProjectsTable = ({ properties, isLoading }: Props) => {
                   </TableCell>
                   <TableCell>
                     <div className="opacity-60 space-x-2">
-                      <button>
-                        <Edit className="h-5 w-5" />
-                      </button>
+                      <Link href={`/dashboard/projects/edit-project/${item?._id}`}>
+                        <button>
+                          <Edit className="h-5 w-5" />
+                        </button>
+                      </Link>
                       <DeleteProject id={item?._id} />
                     </div>
                   </TableCell>

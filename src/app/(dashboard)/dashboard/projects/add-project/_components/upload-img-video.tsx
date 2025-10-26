@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { FileVideoCamera, ImageUp, X } from "lucide-react";
 import Image from "next/image";
@@ -13,14 +13,45 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
+import { usePathname } from "next/navigation";
 
 interface Props {
   form: UseFormReturn<ProjectFormValues>;
 }
 
 const UploadImgVideo = ({ form }: Props) => {
-  const [selectedImagePreview, setSelectedImagePreview] = useState<string | null>(null);
-  const [selectedVideoPreview, setSelectedVideoPreview] = useState<string | null>(null);
+  const pathName = usePathname();
+  const [selectedImagePreview, setSelectedImagePreview] = useState<
+    string | null
+  >(null);
+  const [selectedVideoPreview, setSelectedVideoPreview] = useState<
+    string | null
+  >(null);
+
+  const images = form.getValues("images");
+  const videos = form.getValues("videos");
+
+  useEffect(() => {
+    if (pathName !== "/dashboard/projects/add-project") {
+      // Image
+      if (Array.isArray(images)) {
+        setSelectedImagePreview(images[0] || null);
+      } else if (images instanceof File) {
+        setSelectedImagePreview(URL.createObjectURL(images));
+      } else if (typeof images === "string") {
+        setSelectedImagePreview(images);
+      }
+
+      // Video
+      if (Array.isArray(videos)) {
+        setSelectedVideoPreview(videos[0] || null);
+      } else if (videos instanceof File) {
+        setSelectedVideoPreview(URL.createObjectURL(videos));
+      } else if (typeof videos === "string") {
+        setSelectedVideoPreview(videos);
+      }
+    }
+  }, [images, videos, pathName]);
 
   const handleImageUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
@@ -164,7 +195,9 @@ const UploadImgVideo = ({ form }: Props) => {
                       }
                     >
                       <div className="flex flex-col items-center gap-2 opacity-40">
-                        <FileVideoCamera style={{ height: "50px", width: "50px" }} />
+                        <FileVideoCamera
+                          style={{ height: "50px", width: "50px" }}
+                        />
                         <span>Upload Video</span>
                       </div>
                     </Button>
