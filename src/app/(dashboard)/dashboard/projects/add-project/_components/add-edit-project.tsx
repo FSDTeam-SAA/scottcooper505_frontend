@@ -12,12 +12,13 @@ import z from "zod";
 import { Form } from "@/components/ui/form";
 import { useMutation } from "@tanstack/react-query";
 import { toast } from "sonner";
+import { useSession } from "next-auth/react";
 
 export type ProjectFormValues = z.input<typeof projectFormSchema>;
 
-export const AddProject = () => {
-  const token =
-    "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2OGZkOTc0YmQyNGVjN2Q2MGY4MWU3NjQiLCJyb2xlIjoiQURNSU4iLCJpYXQiOjE3NjE0NTEyMjIsImV4cCI6MTc2MjA1NjAyMn0.Neq5TFLPNjGKyAu-8aPkhNAHHpTUkaH8rUwGOHHNvvk";
+export const AddEditProject = () => {
+  const session = useSession();
+  const token = (session?.data?.user as { accessToken: string })?.accessToken;
 
   const form = useForm<ProjectFormValues>({
     resolver: zodResolver(projectFormSchema),
