@@ -17,6 +17,10 @@ import {
   InputOTPGroup,
   InputOTPSlot,
 } from "@/components/ui/input-otp";
+import { useMutation } from "@tanstack/react-query";
+import { toast } from "sonner";
+import { useRouter, useSearchParams } from "next/navigation";
+import { Loader2 } from "lucide-react";
 
 const formSchema = z.object({
   otp: z.string().min(6, "OTP must be 6 digits").max(6, "OTP must be 6 digits"),
@@ -25,6 +29,11 @@ const formSchema = z.object({
 type FormValues = z.input<typeof formSchema>;
 
 const EnterOtpForm = () => {
+  const router = useRouter()
+  const searchParams = useSearchParams();
+  const email = searchParams.get("email");
+  const decodedEmail = decodeURIComponent(email || "");
+
   const form = useForm<FormValues>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -32,9 +41,64 @@ const EnterOtpForm = () => {
     },
   });
 
+
+
+  // otp api integration
+  const { mutate, isPending } = useMutation({
+    mutationKey: ["verify-otp"],
+    mutationFn: (values: { otp: string; email: string }) =>
+      fetch(`${process.env.NEXT_PUBLIC_API_URL}/auth/verify-code`, {
+        method: "POST",
+        headers: {
+          "content-type": "application/json",
+        },
+        body: JSON.stringify(values),
+      }).then((res) => res.json()),
+    onSuccess: (data) => {
+      if (!data?.status) {
+        toast.error(data?.message || "Something went wrong");
+        return;
+      } else {
+        toast.success(data?.message || "Email sent successfully!");
+        router.push(
+          `/reset-password?email=${encodeURIComponent(decodedEmail)}`
+        );
+      }
+    },
+  });
+
+  // reset otp api integrattion
+  const { mutate: resentOtp, isPending: resentOtpPending } = useMutation({
+    mutationKey: ["fotgot-password"],
+    mutationFn: (email: string) =>
+      fetch(
+        `${process.env.NEXT_PUBLIC_API_URL}/auth/forget-password`,
+        {
+          method: "POST",
+          headers: {
+            "content-type": "application/json",
+          },
+          body: JSON.stringify({ email }),
+        }
+      ).then((res) => res.json()),
+    onSuccess: (data, email) => {
+      if (!data?.status) {
+        toast.error(data?.message || "Something went wrong");
+        return;
+      } else {
+        toast.success(data?.message || "Email sent successfully!");
+        router.push(`/enter-otp?email=${encodeURIComponent(email)}`);
+      }
+    },
+  });
+
+
   const onSubmit = (values: FormValues) => {
-    console.log("OTP values: ", values);
-    // Handle OTP verification logic here
+    const payload = {
+      otp: values.otp,
+      email: decodedEmail,
+    };
+    mutate(payload);
   };
 
   return (
@@ -98,7 +162,7 @@ const EnterOtpForm = () => {
                 type="submit"
                 className="w-full text-white font-semibold py-2 h-auto"
               >
-                Verify
+                Verify {isPending && <Loader2 className="animate-spin" />}
               </Button>
 
               {/* Resend OTP Option */}
@@ -109,11 +173,10 @@ const EnterOtpForm = () => {
                     type="button"
                     className="text-primary font-medium"
                     onClick={() => {
-                      // Add resend OTP logic here
-                      console.log("Resend OTP clicked");
+                      resentOtp(decodedEmail);
                     }}
                   >
-                    Resend OTP
+                    Resend OTP {resentOtpPending && "..." }
                   </button>
                 </p>
               </div>
@@ -126,3 +189,4 @@ const EnterOtpForm = () => {
 };
 
 export default EnterOtpForm;
+
