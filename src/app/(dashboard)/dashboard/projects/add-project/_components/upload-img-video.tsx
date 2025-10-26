@@ -1,3 +1,5 @@
+"use client";
+
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { FileVideoCamera, ImageUp, X } from "lucide-react";
@@ -17,19 +19,18 @@ interface Props {
 }
 
 const UploadImgVideo = ({ form }: Props) => {
-  const [selectedImage, setSelectedImage] = useState<string | null>(null);
-  const [selectedVideo, setSelectedVideo] = useState<string | null>(null);
+  const [selectedImagePreview, setSelectedImagePreview] = useState<string | null>(null);
+  const [selectedVideoPreview, setSelectedVideoPreview] = useState<string | null>(null);
 
   const handleImageUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
     if (file && file.type.startsWith("image/")) {
       const imageUrl = URL.createObjectURL(file);
-      setSelectedImage(imageUrl);
-      setSelectedVideo(null);
+      setSelectedImagePreview(imageUrl);
+      setSelectedVideoPreview(null);
 
-      form.setValue("image", imageUrl, { shouldValidate: true });
-      form.setValue("video", "", { shouldValidate: true });
-      form.clearErrors();
+      form.setValue("images", file, { shouldValidate: true });
+      form.setValue("videos", undefined, { shouldValidate: true });
     }
   };
 
@@ -37,57 +38,51 @@ const UploadImgVideo = ({ form }: Props) => {
     const file = event.target.files?.[0];
     if (file && file.type.startsWith("video/")) {
       const videoUrl = URL.createObjectURL(file);
-      setSelectedVideo(videoUrl);
-      setSelectedImage(null);
+      setSelectedVideoPreview(videoUrl);
+      setSelectedImagePreview(null);
 
-      form.setValue("video", videoUrl, { shouldValidate: true });
-      form.setValue("image", "", { shouldValidate: true });
-      form.clearErrors();
+      form.setValue("videos", file, { shouldValidate: true });
+      form.setValue("images", undefined, { shouldValidate: true });
     }
   };
 
   const clearSelection = () => {
-    if (selectedImage) {
-      URL.revokeObjectURL(selectedImage);
-      setSelectedImage(null);
-      form.setValue("image", "", { shouldValidate: true });
+    if (selectedImagePreview) {
+      URL.revokeObjectURL(selectedImagePreview);
+      setSelectedImagePreview(null);
+      form.setValue("images", undefined, { shouldValidate: true });
     }
-    if (selectedVideo) {
-      URL.revokeObjectURL(selectedVideo);
-      setSelectedVideo(null);
-      form.setValue("video", "", { shouldValidate: true });
+    if (selectedVideoPreview) {
+      URL.revokeObjectURL(selectedVideoPreview);
+      setSelectedVideoPreview(null);
+      form.setValue("videos", undefined, { shouldValidate: true });
     }
   };
 
   return (
     <div className="space-y-8">
-      {/* Image Upload/Preview Section */}
+      {/* Image Upload */}
       <FormField
         control={form.control}
-        name="image"
+        name="images"
         render={() => (
           <FormItem>
             <FormLabel>Add Image</FormLabel>
             <FormControl>
               <div className="border border-gray-400 p-5 rounded-lg">
-                {selectedImage ? (
+                {selectedImagePreview ? (
                   <div className="relative">
-                    <div className="flex flex-col items-center">
-                      <Image
-                        src={selectedImage}
-                        alt="Uploaded preview"
-                        width={1000}
-                        height={1000}
-                        className="max-h-48 max-w-full object-contain rounded"
-                      />
-                      <div className="text-sm text-gray-600 mt-2">
-                        Image Preview
-                      </div>
-                    </div>
+                    <Image
+                      src={selectedImagePreview}
+                      alt="Preview"
+                      width={1000}
+                      height={1000}
+                      className="max-h-48 max-w-full object-contain rounded"
+                    />
                     <Button
                       variant="outline"
                       size="sm"
-                      className="absolute -top-2 -right-2 h-6 w-6 p-0 rounded-full bg-white border border-gray-300"
+                      className="absolute -top-2 -right-2 h-6 w-6 p-0 rounded-full bg-white border"
                       onClick={clearSelection}
                       type="button"
                     >
@@ -105,14 +100,15 @@ const UploadImgVideo = ({ form }: Props) => {
                     />
                     <Button
                       variant="outline"
-                      className="w-full h-52 text-base font-normal border-2 border-dashed border-gray-300 bg-transparent flex items-center justify-center"
+                      className="w-full h-52 border-2 border-dashed border-gray-300 flex items-center justify-center"
+                      type="button"
                       onClick={() =>
                         document.getElementById("image-upload")?.click()
                       }
-                      type="button"
                     >
                       <div className="flex flex-col items-center gap-2 opacity-40">
                         <ImageUp style={{ height: "50px", width: "50px" }} />
+                        <span>Upload Image</span>
                       </div>
                     </Button>
                   </div>
@@ -124,33 +120,26 @@ const UploadImgVideo = ({ form }: Props) => {
         )}
       />
 
-      {/* Video Upload/Preview Section */}
+      {/* Video Upload */}
       <FormField
         control={form.control}
-        name="video"
+        name="videos"
         render={() => (
           <FormItem>
             <FormLabel>Or Add Video</FormLabel>
             <FormControl>
               <div className="border border-gray-400 p-5 rounded-lg">
-                {selectedVideo ? (
+                {selectedVideoPreview ? (
                   <div className="relative">
-                    <div className="flex flex-col items-center">
-                      <video
-                        src={selectedVideo}
-                        controls
-                        className="max-h-48 max-w-full object-contain rounded"
-                      >
-                        Your browser does not support the video tag.
-                      </video>
-                      <p className="text-sm text-gray-600 mt-2">
-                        Video Preview
-                      </p>
-                    </div>
+                    <video
+                      src={selectedVideoPreview}
+                      controls
+                      className="max-h-48 max-w-full object-contain rounded"
+                    />
                     <Button
                       variant="outline"
                       size="sm"
-                      className="absolute -top-2 -right-2 h-6 w-6 p-0 rounded-full bg-white border border-gray-300"
+                      className="absolute -top-2 -right-2 h-6 w-6 p-0 rounded-full bg-white border"
                       onClick={clearSelection}
                       type="button"
                     >
@@ -168,16 +157,15 @@ const UploadImgVideo = ({ form }: Props) => {
                     />
                     <Button
                       variant="outline"
-                      className="w-full h-52 text-base font-normal border-2 border-dashed border-gray-300 bg-transparent flex items-center justify-center"
+                      className="w-full h-52 border-2 border-dashed border-gray-300 flex items-center justify-center"
+                      type="button"
                       onClick={() =>
                         document.getElementById("video-upload")?.click()
                       }
-                      type="button"
                     >
                       <div className="flex flex-col items-center gap-2 opacity-40">
-                        <FileVideoCamera
-                          style={{ height: "50px", width: "50px" }}
-                        />
+                        <FileVideoCamera style={{ height: "50px", width: "50px" }} />
+                        <span>Upload Video</span>
                       </div>
                     </Button>
                   </div>

@@ -11,10 +11,10 @@ export const projectFormSchema = z
       .string()
       .min(10, { message: "Description must be at least 10 characters long." }),
 
-    image: z.string().optional(),
-    video: z.string().optional(),
+    images: z.any().optional(),
+    videos: z.any().optional(),
   })
-  .refine((data) => data.image || data.video, {
+  .refine((data) => data.images || data.videos, {
     message: "Please upload either an image or a video.",
-    path: ["image"],
+    path: ["images"],
   });
