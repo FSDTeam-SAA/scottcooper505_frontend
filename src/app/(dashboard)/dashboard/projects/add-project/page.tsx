@@ -1,3 +1,5 @@
+export const dynamic = "force-dynamic";
+
 import { AddEditProject } from "./_components/add-edit-project";
 
 const page = () => {
