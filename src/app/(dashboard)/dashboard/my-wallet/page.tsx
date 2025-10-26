@@ -3,7 +3,7 @@ import MyWallet from "./_components/my-wallet";
 
 const page = () => {
   return (
-    <div>
+    <div className=" p-5">
       <MyWallet />
     </div>
   );

@@ -1,7 +1,4 @@
 import React from "react";
-import { Button } from "../ui/button";
-import { ArrowRight } from "lucide-react";
-import Link from "next/link";
 
 const Hero = () => {
   return (
@@ -14,9 +11,11 @@ const Hero = () => {
         muted
         playsInline
       />
-      <div className="absolute inset-0 bg-black/40" />
+      <div  />
 
-      <div className="relative z-10 text-white text-center">
+      {/* className="absolute inset-0 bg-black/40" */}
+
+      {/* <div className="relative z-10 text-white text-center">
         <h1 className="text-4xl md:text-6xl font-bold mb-4 lg:max-w-5xl mx-auto">
           Reliable Construction. Exceptional Results.
         </h1>
@@ -31,7 +30,7 @@ const Hero = () => {
             Book Now <ArrowRight />
           </Button>
         </Link>
-      </div>
+      </div> */}
     </div>
   );
 };

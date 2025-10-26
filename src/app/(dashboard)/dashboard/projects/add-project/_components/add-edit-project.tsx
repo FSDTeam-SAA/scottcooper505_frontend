@@ -30,7 +30,7 @@ interface PropertiesType {
 
 interface Props {
   projectDetails?: PropertiesType;
-  id: string;
+  id?: string;
 }
 
 export const AddEditProject = ({ projectDetails, id }: Props) => {

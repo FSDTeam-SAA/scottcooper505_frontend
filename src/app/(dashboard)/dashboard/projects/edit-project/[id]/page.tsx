@@ -29,7 +29,7 @@ const Page = () => {
   });
 
   return (
-    <div>
+    <div className=" p-5">
       <AddEditProject projectDetails={projectDetails} id={id as string} />
     </div>
   );

@@ -40,7 +40,7 @@ const Projects = () => {
 
   return (
     <div className="space-y-6">
-      <div className="flex items-center justify-between">
+      <div className="flex items-center justify-between  p-5">
         <PathTracker />
 
         <Link href={"/dashboard/projects/add-project"}>
