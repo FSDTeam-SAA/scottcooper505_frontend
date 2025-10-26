@@ -6,7 +6,7 @@ export const authOptions: NextAuthOptions = {
   secret: process.env.NEXTAUTH_SECRET,
   session: {
     strategy: "jwt",
-    maxAge: 7 * 24 * 60 * 60, 
+    maxAge: 7 * 24 * 60 * 60,
   },
   providers: [
     CredentialsProvider({
@@ -23,10 +23,9 @@ export const authOptions: NextAuthOptions = {
         if (!credentials?.email || !credentials?.password) {
           throw new Error("Please enter your email and password");
         }
-
         try {
           const res = await fetch(
-            `${process.env.NEXT_PUBLIC_BACKEND_URL}/auth/login`,
+            `${process.env.NEXT_PUBLIC_API_URL}/auth/login`,
             {
               method: "POST",
               headers: {
@@ -40,15 +39,11 @@ export const authOptions: NextAuthOptions = {
           );
 
           const response = await res.json();
-          if (!res.ok || !response?.success) {
+          console.log(response)
+          if (!res.ok || !response?.status) {
             throw new Error(response?.message || "Login failed");
           }
-            if (response.data.user.role === "user") {
-              throw new Error("Only admin can access this page");
-            
-            }
           const { user, accessToken } = response.data;
-
           return {
             id: user._id,
             name: user.name,
