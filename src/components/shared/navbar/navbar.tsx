@@ -1,23 +1,37 @@
 "use client";
+
 import { Button } from "@/components/ui/button";
 import { navLinks } from "@/utils/navLinks";
 import Image from "next/image";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import MobileNavbar from "./mobile-navbar";
 import { useEffect, useState } from "react";
+import { useSession, signOut } from "next-auth/react";
+import {
+  Avatar,
+  AvatarFallback,
+  AvatarImage,
+} from "@/components/ui/avatar";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 
 const Navbar = () => {
   const pathname = usePathname();
+  const router = useRouter();
   const [isAtTop, setIsAtTop] = useState(true);
+
+  const { data: session } = useSession();
+  const user = session?.user as { name?: string; email?: string; image?: string; accessToken?: string } | undefined;
 
   useEffect(() => {
     const handleScroll = () => {
-      if (window.scrollY > 50) {
-        setIsAtTop(false);
-      } else {
-        setIsAtTop(true);
-      }
+      setIsAtTop(window.scrollY <= 50);
     };
 
     window.addEventListener("scroll", handleScroll);
@@ -26,31 +40,27 @@ const Navbar = () => {
 
   return (
     <div
-      className={`fixed top-0 left-0 w-full z-50 transition-all duration-500 ${
-        pathname === "/" && isAtTop ? "bg-transparent" : "bg-white"
-      }`}
+      className={`fixed top-0 left-0 w-full z-50 transition-all duration-500 ${pathname === "/" && isAtTop ? "bg-transparent" : "bg-white"
+        }`}
     >
       <div className="container py-4">
         <div className="flex items-center justify-between">
-          {/* logo */}
+          {/* Logo */}
           <Link href={"/"}>
-            <div>
-              <Image
-                src={"/logo.png"}
-                alt="logo.png"
-                width={1000}
-                height={1000}
-                className="h-[72px] w-[125px]"
-              />
-            </div>
+            <Image
+              src={"/logo.png"}
+              alt="logo.png"
+              width={1000}
+              height={1000}
+              className="h-[72px] w-[125px]"
+            />
           </Link>
 
-          {/* for desktop */}
+          {/* Desktop navigation */}
           <div className="hidden md:block">
             <ul className="flex items-center gap-2 text-primary">
               {navLinks.map((item, index) => {
                 const isActive = item.link === pathname;
-
                 return (
                   <li key={index}>
                     <Link
@@ -59,7 +69,10 @@ const Navbar = () => {
                         p-2 px-4 rounded-3xl font-medium transition-all duration-500 
                         hover:bg-[#e7e7e7] 
                         ${isActive ? "bg-[#e7e7e7] text-primary" : ""}
-                        ${pathname === "/" && isAtTop && !isActive ? "text-white" : "text-primary"}
+                        ${pathname === "/" && isAtTop && !isActive
+                          ? "text-white"
+                          : "text-primary"
+                        }
                       `}
                     >
                       {item.label}
@@ -70,10 +83,41 @@ const Navbar = () => {
             </ul>
           </div>
 
+          {/* Auth section */}
           <div className="hidden md:block">
-            <Link href={"/login"}>
-              <Button>Login</Button>
-            </Link>
+            {!user ? (
+              <Link href={"/login"}>
+                <Button>Login</Button>
+              </Link>
+            ) : (
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <Avatar className="cursor-pointer border border-gray-300">
+                    <AvatarImage src={user.image || "/default-avatar.png"} alt={user.name || "User"} />
+                    <AvatarFallback>
+                      {user?.name?.charAt(0)?.toUpperCase() || "U"}
+                    </AvatarFallback>
+                  </Avatar>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="end" className="w-48">
+                  <DropdownMenuItem className="cursor-pointer" onClick={() => router.push("/profile")}>
+                    Profile
+                  </DropdownMenuItem>
+                  <DropdownMenuItem className="cursor-pointer" onClick={() => router.push("/my-booking")}>
+                    My Booking
+                  </DropdownMenuItem>
+                  <DropdownMenuSeparator />
+                  <DropdownMenuItem
+                    onClick={() => {
+                      signOut({ callbackUrl: "/" });
+                    }}
+                    className="text-red-600"
+                  >
+                    Logout
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
+            )}
           </div>
 
           {/* Mobile menu button */}
