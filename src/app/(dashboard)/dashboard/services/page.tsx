@@ -1,9 +1,12 @@
-import React from 'react'
+import React from "react";
+import ServicesContainer from "./_components/services-container";
 
-const page = () => {
+const ServicesPage = () => {
   return (
-    <div>page</div>
-  )
-}
+    <div className="p-5">
+      <ServicesContainer />
+    </div>
+  );
+};
 
-export default page
+export default ServicesPage;
