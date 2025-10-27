@@ -26,7 +26,7 @@ const Settings = () => {
     },
     enabled: !!token,
   });
-
+  
   return (
     <div className="space-y-8">
       <SettingsHeader profileInfo={profileInfo} isLoading={isLoading} />
