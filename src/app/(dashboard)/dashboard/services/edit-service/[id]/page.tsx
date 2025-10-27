@@ -3,9 +3,8 @@ import EditServiceForm from '../_components/edit-service-form'
 
 const EditServicePage = ({params}:{params:{id:string}}) => {
   return (
-    <div>
-      <h2>{params.id}</h2>
-      <EditServiceForm/>
+    <div className='p-5'>
+      <EditServiceForm serviceId={params.id}/>
     </div>
   )
 }

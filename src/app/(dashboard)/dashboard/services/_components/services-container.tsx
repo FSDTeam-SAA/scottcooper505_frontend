@@ -176,7 +176,9 @@ const ServicesContainer = () => {
                       : "N/A"}
                   </TableCell>
                   <TableCell className="flex items-center justify-center gap-2 text-base font-semibold text-[#424242] leading-[120%] text-center py-[14px]">
+                    <Link href={`/dashboard/services/edit-service/${service?._id}`}>
                     <SquarePen className="w-5 h-5 cursor-pointer" />
+                    </Link>
                     <button
                       onClick={() => {
                         setServiceId(service?._id);

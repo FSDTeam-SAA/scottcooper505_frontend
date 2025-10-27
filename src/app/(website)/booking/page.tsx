@@ -1,12 +1,14 @@
 import React from 'react'
 import BookingContainer from './_components/booking-container'
+// import BookingPage from './_components/booking-page'
 
-const BookingPage = () => {
+const BookingPages = () => {
   return (
-    <div className='mt-32 h-screen container mx-auto'>
+    <div className='mt-32 container mx-auto'>
       <BookingContainer/>
+      {/* <BookingPage serviceId={params.id}/> */}
     </div>
   )
 }
 
-export default BookingPage
+export default BookingPages

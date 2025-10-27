@@ -1,22 +1,22 @@
 "use client";
 import PathTracker from "@/app/(dashboard)/_components/path-tracker";
-import ScottcooperPagination from "@/components/ui/ScottcooperPagination";
-import React, { useState } from "react";
+// import ScottcooperPagination from "@/components/ui/ScottcooperPagination";
+// import React, { useState } from "react";
 import BookingsTable from "./bookings-table";
 import { useSession } from "next-auth/react";
 import { useQuery } from "@tanstack/react-query";
 
 export const BookingHistory = () => {
-  const [currentPage, setCurrentPage] = useState(1);
+  // const [currentPage, setCurrentPage] = useState(1);
 
   const session = useSession();
   const token = (session?.data?.user as { accessToken: string })?.accessToken;
 
   const { data: allHistory = {} } = useQuery({
-    queryKey: ["all-history", currentPage],
+    queryKey: ["all-history"],
     queryFn: async () => {
       const res = await fetch(
-        `${process.env.NEXT_PUBLIC_API_URL}/dashboard/booking-history?page=${currentPage}&limit=10`,
+        `${process.env.NEXT_PUBLIC_API_URL}/dashboard/booking-history`,
         {
           method: "GET",
           headers: {
@@ -45,7 +45,7 @@ export const BookingHistory = () => {
         </div>
 
         {/* pagination here  */}
-        <div className="bg-transparent flex items-center justify-between p-4 bg-white">
+        {/* <div className="bg-transparent flex items-center justify-between p-4 bg-white">
           <p className="text-sm md:text-base font-medium leading-[120%]  text-[#3F3F3F]">
             Showing {currentPage}
             of 259 results
@@ -57,7 +57,7 @@ export const BookingHistory = () => {
               onPageChange={(page) => setCurrentPage(page)}
             />
           </div>
-        </div>
+        </div> */}
       </div>
     </div>
   );

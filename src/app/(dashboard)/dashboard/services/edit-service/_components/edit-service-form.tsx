@@ -30,14 +30,48 @@ import { Calendar } from "@/components/ui/calendar";
 import { format } from "date-fns";
 import QuillEditor from "@/components/ui/quill-editor";
 import Image from "next/image";
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQuery } from "@tanstack/react-query";
 import { useSession } from "next-auth/react";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
 
-/* -------------------------------------------------
-   Zod schema – exact shape you need
-   ------------------------------------------------- */
+export interface ServiceResponse {
+  status: boolean;
+  message: string;
+  data: ServiceData;
+}
+
+export interface ServiceData {
+  _id: string;
+  title: string;
+  description: string;
+  price: number;
+  thumbnail: string;
+  duration: string;
+  schedule: Schedule[];
+  createdBy: string;
+  createdAt: string;
+  updatedAt: string;
+  __v: number;
+  generatedSlots: GeneratedSlot[];
+}
+
+export interface Schedule {
+  date: string; // ISO date string
+  startTime: string; // "HH:mm" format
+  endTime: string; // "HH:mm" format
+}
+
+export interface GeneratedSlot {
+  date: string; // ISO date string
+  slots: Slot[];
+}
+
+export interface Slot {
+  startTime: string; // "HH:mm" format
+  endTime: string; // "HH:mm" format
+}
+
 const scheduleSchema = z.object({
   date: z.date({ message: "Date is required" }),
   startTime: z.string().min(1, "Start time is required"),
@@ -58,7 +92,7 @@ const formSchema = z.object({
    ------------------------------------------------- */
 type FormValues = z.infer<typeof formSchema>;
 
-export default function EditServiceForm() {
+export default function EditServiceForm({ serviceId }: { serviceId: string }) {
   const [previewImage, setPreviewImage] = React.useState<string | null>(null);
   const router = useRouter();
   const [isDragOver, setIsDragOver] = React.useState(false);
@@ -111,13 +145,41 @@ export default function EditServiceForm() {
 
   const handleDragLeave = () => setIsDragOver(false);
 
-  //   api integration
+  // get by id api integration
+
+  const { data, isLoading, isError, error } = useQuery<ServiceResponse>({
+    queryKey: ["service", serviceId],
+    queryFn: () =>
+      fetch(`${process.env.NEXT_PUBLIC_API_URL}/service/${serviceId}`).then(
+        (res) => res.json()
+      ),
+  });
+
+  console.log(data);
+  React.useEffect(() => {
+    if (data) {
+      form.setValue("title", data.data.title);
+      form.setValue("price", data.data.price);
+      form.setValue("description", data.data.description);
+      form.setValue("duration", data.data.duration);
+      setPreviewImage(data.data.thumbnail);
+      form.setValue(
+        "schedule",
+        data.data.schedule.map(schedule => ({
+          ...schedule,
+          date: new Date(schedule.date)
+        }))
+      );
+    }
+  }, [data, form]);
+
+  //  edit  api integration
 
   const { mutate, isPending } = useMutation({
-    mutationKey: ["add-service"],
+    mutationKey: ["edit-service", serviceId],
     mutationFn: (formData: FormData) =>
-      fetch(`${process.env.NEXT_PUBLIC_API_URL}/service`, {
-        method: "POST",
+      fetch(`${process.env.NEXT_PUBLIC_API_URL}/service/${serviceId}`, {
+        method: "PUT",
         headers: {
           // "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
@@ -126,15 +188,22 @@ export default function EditServiceForm() {
       }).then((res) => res.json()),
     onSuccess: (data) => {
       if (!data?.status) {
-        toast.error(data?.message || "Failed to add service");
+        toast.error(data?.message || "Failed to edit service");
         return;
       } else {
-        toast.success(data?.message || "Service added successfully");
+        toast.success(data?.message || "Service updated successfully");
         form.reset();
         router.push("/dashboard/services");
       }
     },
   });
+
+  if (isLoading) {
+    return <div>loading ...</div>;
+  }
+  if (isError) {
+    return <div>{error.message}</div>;
+  }
 
   const onSubmit = (values: FormValues) => {
     console.log("Form values (design preview):", values);
@@ -485,5 +554,3 @@ export default function EditServiceForm() {
     </div>
   );
 }
-
-
