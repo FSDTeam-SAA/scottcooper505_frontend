@@ -9,7 +9,7 @@ import { useQuery } from "@tanstack/react-query";
 export const BookingHistory = () => {
   const [currentPage, setCurrentPage] = useState(1);
 
-   const session = useSession();
+  const session = useSession();
   const token = (session?.data?.user as { accessToken: string })?.accessToken;
 
   const { data: allHistory = {} } = useQuery({
@@ -32,8 +32,6 @@ export const BookingHistory = () => {
     },
     enabled: !!token,
   });
-
-  console.log("allHistory: ", allHistory)
 
   return (
     <div className="space-y-6">
