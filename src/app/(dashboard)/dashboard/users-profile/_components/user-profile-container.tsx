@@ -14,9 +14,9 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useSession } from "next-auth/react";
 import { Eye, Trash2 } from "lucide-react";
 import ScottcooperPagination from "@/components/ui/ScottcooperPagination";
-import SingleUserPage from "../[id]/page";
 import DeleteModal from "@/components/modal/DeleteModal";
 import { toast } from "sonner";
+import SingleUserContainer from "./single-user-container";
 
 export interface UserApiResponse {
   status: boolean;
@@ -220,7 +220,7 @@ const UserProfileContainer = () => {
       {/* show user modal  */}
       <div>
         {showUser && (
-          <SingleUserPage
+          <SingleUserContainer
             userId={userId || ""}
             open={showUser}
             onOpenChange={(showUser) => setShowUser(showUser)}
