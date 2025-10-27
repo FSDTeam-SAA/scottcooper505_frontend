@@ -8,7 +8,6 @@ import { usePathname, useRouter } from "next/navigation";
 import MobileNavbar from "./mobile-navbar";
 import { useEffect, useState } from "react";
 import { useSession, signOut } from "next-auth/react";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -27,7 +26,7 @@ const Navbar = () => {
     | {
         name?: string;
         email?: string;
-        image?: string;
+        profileImage?: string;
         accessToken?: string;
         role?: string;
       }
@@ -100,15 +99,19 @@ const Navbar = () => {
             ) : (
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
-                  <Avatar className="cursor-pointer border border-gray-300">
-                    <AvatarImage
-                      src={user.image || "/default-avatar.png"}
-                      alt={user.name || "User"}
+                  <div className="cursor-pointer">
+                    <Image
+                      src={
+                        user?.profileImage
+                          ? user?.profileImage
+                          : "/placeholder.jpeg"
+                      }
+                      alt="placeholder.png"
+                      width={1000}
+                      height={1000}
+                      className="h-10 w-10 rounded-full"
                     />
-                    <AvatarFallback>
-                      {user?.name?.charAt(0)?.toUpperCase() || "U"}
-                    </AvatarFallback>
-                  </Avatar>
+                  </div>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent align="end" className="w-48">
                   {role === "ADMIN" && (
