@@ -3,17 +3,26 @@ import React from "react";
 import { Button } from "../ui/button";
 import { ArrowRight } from "lucide-react";
 import Link from "next/link";
+import { getTruncatedText } from "@/utils/getTruncatedText";
 
-const ServiceCard = ({
-  service,
-}: {
-  service: { _id: number; serviceImg: string; title: string; desc: string };
-}) => {
+interface Service {
+  _id: number;
+  thumbnail: string;
+  title: string;
+  description: string;
+}
+
+interface Props {
+  service: Service;
+}
+
+const ServiceCard = ({ service }: Props) => {
+
   return (
     <div className="p-5 rounded-lg shadow-[0px_0px_60px_0px_#0000003D] group ">
       <div className="overflow-hidden rounded-lg">
         <Image
-          src={service.serviceImg}
+          src={service?.thumbnail}
           alt="img.png"
           width={1000}
           height={1000}
@@ -21,8 +30,10 @@ const ServiceCard = ({
         />
       </div>
 
-      <h1 className="mt-2 font-bold text-lg">{service.title}</h1>
-      <p className="text-sm text-black/75 mb-4">{service.desc}</p>
+      <h1 className="mt-2 font-bold text-lg">{service?.title}</h1>
+      <p className="text-sm md:text-base text-[#4A484E] leading-[150%] my-3">
+        {getTruncatedText(service?.description, 100)}
+      </p>
 
       <div className="flex items-center justify-between">
         <Link href="/booking">
@@ -31,7 +42,7 @@ const ServiceCard = ({
           </Button>
         </Link>
 
-        <Link href={`/services/${service._id}`}>
+        <Link href={`/services/${service?._id}`}>
           <Button variant="outline" className="text-primary">
             See Details
           </Button>

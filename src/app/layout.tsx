@@ -3,6 +3,7 @@ import { Manrope } from "next/font/google";
 import "./globals.css";
 import { AppProvider } from "@/providers/app-provider";
 import { Toaster } from "sonner";
+import NextTopLoader from 'nextjs-toploader';
 
 const manrope = Manrope({
   variable: "--font-manrope",
@@ -24,7 +25,10 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={`${manrope.className} antialiased bg-[#f4f4f4]`}>
-        <AppProvider>{children}</AppProvider>
+        <AppProvider>
+          <NextTopLoader color="#4d0eb9" showSpinner={false} />
+          {children}
+        </AppProvider>
         <Toaster />
       </body>
     </html>

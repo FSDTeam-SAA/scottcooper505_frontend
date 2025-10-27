@@ -5,7 +5,6 @@ import ScottcooperPagination from "@/components/ui/ScottcooperPagination";
 import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
 import { Funnel, MapPin, Tag, FileImage, Video } from "lucide-react";
 import { useQuery } from "@tanstack/react-query";
-import { useSession } from "next-auth/react";
 import Image from "next/image";
 import React, { useState } from "react";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -45,25 +44,16 @@ const projectTypeLists = [
 const ProjectContainer = () => {
   const [projectType, setProjectType] = useState<string>("");
   const [currentPage, setCurrentPage] = useState(1);
-  const { data: session } = useSession();
-  const token = (session?.user as { accessToken?: string })?.accessToken;
 
   const { data: allProject, isLoading } = useQuery<ProjectResponse>({
     queryKey: ["all-project", currentPage],
     queryFn: async () => {
       const res = await fetch(
-        `${process.env.NEXT_PUBLIC_API_URL}/project?page=${currentPage}&limit=6`,
-        {
-          headers: {
-            "content-type": "application/json",
-            Authorization: `Bearer ${token}`,
-          },
-        }
+        `${process.env.NEXT_PUBLIC_API_URL}/project?page=${currentPage}&limit=6`
       );
       const json = await res.json();
       return json.data;
     },
-    enabled: !!token,
   });
 
   const properties = allProject?.properties || [];
@@ -161,7 +151,7 @@ const ProjectContainer = () => {
                           <video
                             src={project.videos[0]}
                             controls
-                            className="w-full h-auto rounded-md"
+                            className="w-full h-[700px] rounded-md"
                           />
                         ) : (
                           <Image
@@ -169,7 +159,7 @@ const ProjectContainer = () => {
                             alt={project.title}
                             width={1920}
                             height={1080}
-                            className="w-full h-auto object-contain rounded-md"
+                            className="w-full h-[700px] object-contain rounded-md"
                           />
                         )}
                       </DialogContent>
@@ -205,8 +195,9 @@ const ProjectContainer = () => {
         {(pagination?.totalPages ?? 0) > 1 && (
           <div className="flex items-center justify-between">
             <p className="text-sm md:text-base font-medium text-[#3F3F3F]">
-              Showing page {pagination?.currentPage ?? currentPage} of {pagination?.totalPages ?? 0} (
-              {pagination?.totalData ?? 0} results)
+              Showing page {pagination?.currentPage ?? currentPage} of{" "}
+              {pagination?.totalPages ?? 0} ({pagination?.totalData ?? 0}{" "}
+              results)
             </p>
 
             <div>
