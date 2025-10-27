@@ -8,11 +8,7 @@ import { usePathname, useRouter } from "next/navigation";
 import MobileNavbar from "./mobile-navbar";
 import { useEffect, useState } from "react";
 import { useSession, signOut } from "next-auth/react";
-import {
-  Avatar,
-  AvatarFallback,
-  AvatarImage,
-} from "@/components/ui/avatar";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -27,7 +23,17 @@ const Navbar = () => {
   const [isAtTop, setIsAtTop] = useState(true);
 
   const { data: session } = useSession();
-  const user = session?.user as { name?: string; email?: string; image?: string; accessToken?: string } | undefined;
+  const user = session?.user as
+    | {
+        name?: string;
+        email?: string;
+        image?: string;
+        accessToken?: string;
+        role?: string;
+      }
+    | undefined;
+
+  const role = user?.role;
 
   useEffect(() => {
     const handleScroll = () => {
@@ -40,8 +46,9 @@ const Navbar = () => {
 
   return (
     <div
-      className={`fixed top-0 left-0 w-full z-50 transition-all duration-500 ${pathname === "/" && isAtTop ? "bg-transparent" : "bg-white"
-        }`}
+      className={`fixed top-0 left-0 w-full z-50 transition-all duration-500 ${
+        pathname === "/" && isAtTop ? "bg-transparent" : "bg-white"
+      }`}
     >
       <div className="container py-4">
         <div className="flex items-center justify-between">
@@ -69,9 +76,10 @@ const Navbar = () => {
                         p-2 px-4 rounded-3xl font-medium transition-all duration-500 
                         hover:bg-[#e7e7e7] 
                         ${isActive ? "bg-[#e7e7e7] text-primary" : ""}
-                        ${pathname === "/" && isAtTop && !isActive
-                          ? "text-primary"
-                          : "text-primary"
+                        ${
+                          pathname === "/" && isAtTop && !isActive
+                            ? "text-primary"
+                            : "text-primary"
                         }
                       `}
                     >
@@ -93,17 +101,34 @@ const Navbar = () => {
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
                   <Avatar className="cursor-pointer border border-gray-300">
-                    <AvatarImage src={user.image || "/default-avatar.png"} alt={user.name || "User"} />
+                    <AvatarImage
+                      src={user.image || "/default-avatar.png"}
+                      alt={user.name || "User"}
+                    />
                     <AvatarFallback>
                       {user?.name?.charAt(0)?.toUpperCase() || "U"}
                     </AvatarFallback>
                   </Avatar>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent align="end" className="w-48">
-                  <DropdownMenuItem className="cursor-pointer" onClick={() => router.push("/profile")}>
+                  {role === "ADMIN" && (
+                    <DropdownMenuItem
+                      className="cursor-pointer font-semibold"
+                      onClick={() => router.push("/dashboard")}
+                    >
+                      Dashboard
+                    </DropdownMenuItem>
+                  )}
+                  <DropdownMenuItem
+                    className="cursor-pointer font-semibold"
+                    onClick={() => router.push("/profile")}
+                  >
                     Profile
                   </DropdownMenuItem>
-                  <DropdownMenuItem className="cursor-pointer" onClick={() => router.push("/my-booking")}>
+                  <DropdownMenuItem
+                    className="cursor-pointer font-semibold"
+                    onClick={() => router.push("/my-booking")}
+                  >
                     My Booking
                   </DropdownMenuItem>
                   <DropdownMenuSeparator />
