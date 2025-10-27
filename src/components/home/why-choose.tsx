@@ -28,7 +28,7 @@ export const WhyChoose = () => {
   return (
     <div className="container">
       <div className="text-center">
-        <h1 className="text-3xl font-bold">Why Choose Rage Away</h1>
+        <h1 className="text-3xl font-bold">Why Choose Rage Away, LLC</h1>
         <p className="text-black/75 mt-2 mb-8">
           Delivering quality construction with integrity, precision, and
           expertise you can rely on.
