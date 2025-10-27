@@ -25,7 +25,7 @@ export const Footer = () => {
               </Link>
 
               <div className="mt-4">
-                <h1>Rage Away</h1>
+                <h1>Rage Away, LLC</h1>
                 <p>
                   Delivering expert construction solutions with precision and
                   reliability.
@@ -71,7 +71,7 @@ export const Footer = () => {
       </div>
 
       <div className="container flex items-center justify-between mt-5 text-sm">
-        <h1>© 2025 Rage Away. All rights reserved.</h1>
+        <h1>© 2025 Rage Away, LLC. All rights reserved.</h1>
 
         <div className="flex items-center gap-2">
           <Link href={"/privacy-policy"} className="hover:text-primary hover:underline">Privacy Policy</Link>

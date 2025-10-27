@@ -13,10 +13,9 @@ import {
 import dynamic from "next/dynamic";
 import React from "react";
 
-const ServiceArea = dynamic(
-  () => import("./_components/service-area"),
-  { ssr: false }
-);
+const ServiceArea = dynamic(() => import("./_components/service-area"), {
+  ssr: false,
+});
 
 const Page = () => {
   return (
@@ -50,9 +49,9 @@ const Page = () => {
 
                 <div className="-mt-1">
                   <h1 className="font-medium mb-2 text-xl">Address</h1>
-                  <h1>123 Business Street</h1>
-                  <h1>Suite 100</h1>
-                  <h1>New York, NY 10001</h1>
+                  <h1>208 Williams Street</h1>
+                  <h1>Hornbeak</h1>
+                  <h1>TN 38232</h1>
                 </div>
               </div>
 
@@ -68,32 +67,24 @@ const Page = () => {
 
                   <div className="space-y-2">
                     <div className="flex items-center justify-between w-full">
-                      <h1>Monday </h1>
-                      <h1>8:00 AM – 6:00 PM</h1>
+                      <h1>Monday</h1>
+                      <h1>8:00 AM – 4:00 PM</h1>
                     </div>
                     <div className="flex items-center justify-between w-full">
-                      <h1>Monday </h1>
-                      <h1>8:00 AM – 6:00 PM</h1>
+                      <h1>Tuesday</h1>
+                      <h1>8:00 AM – 4:00 PM</h1>
                     </div>
                     <div className="flex items-center justify-between w-full">
-                      <h1>Monday </h1>
-                      <h1>8:00 AM – 6:00 PM</h1>
+                      <h1>Wednesday</h1>
+                      <h1>8:00 AM – 4:00 PM</h1>
                     </div>
                     <div className="flex items-center justify-between w-full">
-                      <h1>Monday </h1>
-                      <h1>8:00 AM – 6:00 PM</h1>
+                      <h1>Thursday</h1>
+                      <h1>8:00 AM – 4:00 PM</h1>
                     </div>
                     <div className="flex items-center justify-between w-full">
-                      <h1>Monday </h1>
-                      <h1>8:00 AM – 6:00 PM</h1>
-                    </div>
-                    <div className="flex items-center justify-between w-full">
-                      <h1>Monday </h1>
-                      <h1>8:00 AM – 6:00 PM</h1>
-                    </div>
-                    <div className="flex items-center justify-between w-full">
-                      <h1>Monday </h1>
-                      <h1>8:00 AM – 6:00 PM</h1>
+                      <h1>Friday</h1>
+                      <h1>8:00 AM – 4:00 PM</h1>
                     </div>
                   </div>
                 </div>
@@ -131,7 +122,7 @@ const Page = () => {
                 </h1>
                 <p>
                   When you work with us, you&apos;re working directly with the
-                  owner. Constantino personally oversees every project to ensure
+                  owner. Scott Cooper personally oversees every project to ensure
                   the highest quality standards are met. We&apos;re committed to
                   providing exceptional service, transparent communication, and
                   lasting results for every client.

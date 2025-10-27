@@ -25,7 +25,6 @@ const ServiceDetails = () => {
       </div>
 
       <div className="lg:w-[55%]">
-        <h1 className="text-2xl font-bold mb-4">Details Descriptions</h1>
         <p>{serviceDetails.desc}</p>
         <div>
           <Button className="w-full mt-5">
