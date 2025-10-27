@@ -1,10 +1,10 @@
-"use client"
+"use client";
 
-import PathTracker from '@/app/(dashboard)/_components/path-tracker'
-import { Button } from '@/components/ui/button'
-import { Eye, Plus, Trash2 } from 'lucide-react'
-import Link from 'next/link'
-import React, { useState } from 'react'
+import PathTracker from "@/app/(dashboard)/_components/path-tracker";
+import { Button } from "@/components/ui/button";
+import { Eye, Plus, Trash2 } from "lucide-react";
+import Link from "next/link";
+import React, { useState } from "react";
 import {
   Table,
   TableBody,
@@ -13,47 +13,87 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import ScottcooperPagination from '@/components/ui/ScottcooperPagination'
+import ScottcooperPagination from "@/components/ui/ScottcooperPagination";
+import { useQuery } from "@tanstack/react-query";
+import moment from "moment";
+
+export interface ServiceResponse {
+  status: boolean;
+  message: string;
+  data: {
+    services: Service[];
+    pagination: Pagination;
+  };
+}
+
+export interface Pagination {
+  currentPage: number;
+  totalPages: number;
+  totalData: number;
+  hasNextPage: boolean;
+  hasPrevPage: boolean;
+}
+
+export interface Service {
+  _id: string;
+  title: string;
+  description: string;
+  price: number;
+  thumbnail: string;
+  duration: string;
+  start_time?: string; // optional (not all services have it)
+  end_time?: string; // optional
+  date?: string; // optional
+  createdBy: string;
+  createdAt: string;
+  updatedAt: string;
+  __v: number;
+  timeSlots?: TimeSlot[]; // optional (some have it)
+  schedule: Schedule[];
+}
+
+export interface TimeSlot {
+  start_time: string;
+  end_time: string;
+  duration: string;
+}
+
+export interface Schedule {
+  date: string;
+  startTime: string;
+  endTime: string;
+}
 
 const ServicesContainer = () => {
-    const [currentPage, setCurrentPage] = useState(1);
+  const [currentPage, setCurrentPage] = useState(1);
 
-    const servicesData = [
+  const { data, isLoading, isError, error } = useQuery<ServiceResponse>({
+    queryKey: ["services", currentPage],
+    queryFn: async () => {
+      const res = await fetch(
+        `${process.env.NEXT_PUBLIC_API_URL}/service/get-all-services?page=${currentPage}&limit=10`,
         {
-            id: 1,
-            serviceName : "Service 1",
-            price : "$100",
-            date : "01/01/2023",
-        },
-        {
-            id: 2,
-            serviceName : "Service 1",
-            price : "$100",
-            date : "01/01/2023",
-        },
-        {
-            id: 3,
-            serviceName : "Service 1",
-            price : "$100",
-            date : "01/01/2023",
-        },
-        {
-            id: 4,
-            serviceName : "Service 1",
-            price : "$100",
-            date : "01/01/2023",
-        },
-        {
-            id: 5,
-            serviceName : "Service 1",
-            price : "$100",
-            date : "01/01/2023",
-        },
-    ]
+          method: "GET",
+          headers: {
+            "content-type": "application/json",
+          },
+        }
+      );
+      return res.json();
+    },
+  });
+
+  console.log(data?.data?.services);
+  if (isLoading) {
+    return <div>Loading...</div>;
+  }
+  if (isError) {
+    return <div>Error: {error?.message}</div>;
+  }
 
   return (
     <div>
-        <div className="flex items-center justify-between  p-5">
+      <div className="flex items-center justify-between  p-5">
         <PathTracker />
 
         <Link href={"/dashboard/services/add-service"}>
@@ -70,7 +110,7 @@ const ServicesContainer = () => {
                 service Name
               </TableHead>
               <TableHead className="text-center text-base font-bold text-[#131313] leading-[120%]">
-               Price
+                Price
               </TableHead>
               <TableHead className="text-center text-base font-bold text-[#131313] leading-[120%]">
                 Date
@@ -81,17 +121,22 @@ const ServicesContainer = () => {
             </TableRow>
           </TableHeader>
           <TableBody className="border border-[#B6B6B6]">
-            {servicesData.map((service) => {
+            {data?.data?.services?.map((service) => {
               return (
-                <TableRow key={service?.id} className="border border-[#B6B6B6] ">
+                <TableRow
+                  key={service?._id}
+                  className="border border-[#B6B6B6] "
+                >
                   <TableCell className="text-base font-semibold text-[#131313] leading-[120%] text-center py-[14px]">
-                    {service.serviceName || "N/A"}
+                    {service.title || "N/A"}
                   </TableCell>
                   <TableCell className="text-base font-semibold text-[#131313] leading-[120%] text-center py-[14px]">
                     {service.price || "N/A"}
                   </TableCell>
                   <TableCell className="text-base font-semibold text-[#424242] leading-[120%] text-center py-[14px]">
-                    {service.date || "N/A"}
+                    {service.createdAt
+                      ? moment(service.createdAt).format("MMM DD, YYYY")
+                      : "N/A"}
                   </TableCell>
                   <TableCell className="flex items-center justify-center gap-2 text-base font-semibold text-[#424242] leading-[120%] text-center py-[14px]">
                     <Eye className="w-5 h-5 cursor-pointer" />
@@ -104,23 +149,28 @@ const ServicesContainer = () => {
         </Table>
         {/* pagination here  */}
         <div>
-          <div className="bg-transparent flex items-center justify-between pt-4 md:pt-6 lg:pt-8">
+          {data &&
+            data?.data &&
+            data?.data?.pagination &&
+            data?.data?.pagination?.totalPages > 1 && (
+              <div className="bg-transparent flex items-center justify-between pt-4 md:pt-6 lg:pt-8">
                 <p className="text-sm md:text-base font-medium leading-[120%]  text-[#3F3F3F]">
                   Showing {currentPage}
-                  of 259 results
+                  of {data?.data?.pagination?.totalPages} results
                 </p>
                 <div>
                   <ScottcooperPagination
-                    totalPages={4}
+                    totalPages={data?.data?.pagination?.totalPages || 0}
                     currentPage={currentPage}
                     onPageChange={(page) => setCurrentPage(page)}
                   />
                 </div>
               </div>
+            )}
         </div>
       </div>
     </div>
-  )
-}
+  );
+};
 
-export default ServicesContainer
+export default ServicesContainer;
