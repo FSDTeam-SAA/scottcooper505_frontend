@@ -104,3 +104,14 @@
   flex-shrink: 0;
   border-radius: 10px 10px 0px 0px !important;
 }
+
+/* Remove default react-tabs styles */
+.react-tabs__tab--selected {
+  @apply text-primary font-bold border-b-2 border-primary bg-transparent;
+}
+
+/* Optional: remove the outline border when focused */
+.react-tabs__tab:focus {
+  box-shadow: none !important;
+  background-color: inherit !important;
+}
