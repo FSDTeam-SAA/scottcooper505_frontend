@@ -77,7 +77,7 @@ const BookingsTable = ({ allHistory }: Props) => {
             ))
           ) : (
             <TableRow>
-              <TableCell colSpan={5} className="text-gray-500 py-4">
+              <TableCell colSpan={5} className="text-gray-500 text-4xl font-semibold py-20">
                 No booking history found
               </TableCell>
             </TableRow>
