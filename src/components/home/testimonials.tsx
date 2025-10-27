@@ -1,3 +1,4 @@
+'use client'
 import Image from "next/image";
 import { Rating } from "@smastrom/react-rating";
 import "@smastrom/react-rating/style.css";
