@@ -10,10 +10,13 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useSession } from "next-auth/react";
 import { Eye, Trash2 } from "lucide-react";
 import ScottcooperPagination from "@/components/ui/ScottcooperPagination";
+import SingleUserPage from "../[id]/page";
+import DeleteModal from "@/components/modal/DeleteModal";
+import { toast } from "sonner";
 
 export interface UserApiResponse {
   status: boolean;
@@ -68,7 +71,12 @@ export interface PaginationInfo {
 
 const UserProfileContainer = () => {
   const [currentPage, setCurrentPage] = useState(1);
+  const [showUser, setShowUser] = useState<boolean>(false);
+  const [userId, setUserId] = useState<string>("");
+  const [deleteModalOpen, setDeleteModalOpen] = useState(false);
+  const queryClient = useQueryClient();
   const session = useSession();
+
   const token = (session.data?.user as { accessToken: string })?.accessToken;
   const { data, isLoading, isError, error } = useQuery<UserApiResponse>({
     queryKey: ["users", currentPage],
@@ -86,6 +94,35 @@ const UserProfileContainer = () => {
       return res.json();
     },
   });
+
+  // delete api logic
+  const { mutate: deleteUser } = useMutation({
+    mutationKey: ["delete-user"],
+    mutationFn: (id: string) =>
+      fetch(`${process.env.NEXT_PUBLIC_API_URL}/user/${id}`, {
+        method: "DELETE",
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }).then((res) => res.json()),
+    onSuccess: (data) => {
+      if (!data?.status) {
+        toast.error(data?.message || "Failed to delete user");
+        return;
+      } else {
+        toast.success(data?.message || "User deleted successfully");
+      }
+      queryClient.invalidateQueries({ queryKey: ["users"] });
+    },
+  });
+
+  // delete modal logic
+  const handleDelete = () => {
+    if (userId) {
+      deleteUser(userId);
+    }
+    setDeleteModalOpen(false);
+  };
 
   if (isLoading) return <div>Loading...</div>;
   if (isError) return <div>Error: {error.message}</div>;
@@ -113,9 +150,9 @@ const UserProfileContainer = () => {
             </TableRow>
           </TableHeader>
           <TableBody className="border border-[#B6B6B6]">
-            {data?.data?.users?.map((user) => {
-              return (
-                <TableRow key={user?._id} className="border border-[#B6B6B6] ">
+            {data?.data?.users && data.data.users.length > 0 ? (
+              data.data.users.map((user) => (
+                <TableRow key={user._id} className="border border-[#B6B6B6]">
                   <TableCell className="text-base font-semibold text-[#131313] leading-[120%] text-center py-[14px]">
                     {user.name || "N/A"}
                   </TableCell>
@@ -126,12 +163,35 @@ const UserProfileContainer = () => {
                     {user.phone || "N/A"}
                   </TableCell>
                   <TableCell className="flex items-center justify-center gap-2 text-base font-semibold text-[#424242] leading-[120%] text-center py-[14px]">
-                    <Eye className="w-5 h-5 cursor-pointer" />
-                    <Trash2 className="w-5 h-5 cursor-pointer" />
+                    <button
+                      onClick={() => {
+                        setShowUser(true);
+                        setUserId(user._id);
+                      }}
+                    >
+                      <Eye className="w-5 h-5 cursor-pointer" />
+                    </button>
+                    <button
+                      onClick={() => {
+                        setDeleteModalOpen(true);
+                        setUserId(user._id);
+                      }}
+                    >
+                      <Trash2 className="w-5 h-5 cursor-pointer" />
+                    </button>
                   </TableCell>
                 </TableRow>
-              );
-            })}
+              ))
+            ) : (
+              <TableRow>
+                <TableCell
+                  colSpan={4}
+                  className="text-center text-2xl font-semibold text-black py-6"
+                >
+                  No users found
+                </TableCell>
+              </TableRow>
+            )}
           </TableBody>
         </Table>
         {/* pagination here  */}
@@ -155,6 +215,28 @@ const UserProfileContainer = () => {
               </div>
             )}
         </div>
+      </div>
+
+      {/* show user modal  */}
+      <div>
+        {showUser && (
+          <SingleUserPage
+            userId={userId || ""}
+            open={showUser}
+            onOpenChange={(showUser) => setShowUser(showUser)}
+          />
+        )}
+      </div>
+
+      <div>
+        {/* delete modal  */}
+        {deleteModalOpen && (
+          <DeleteModal
+            isOpen={deleteModalOpen}
+            onClose={() => setDeleteModalOpen(false)}
+            onConfirm={handleDelete}
+          />
+        )}
       </div>
     </div>
   );
