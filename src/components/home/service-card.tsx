@@ -36,7 +36,7 @@ const ServiceCard = ({ service }: Props) => {
       </p>
 
       <div className="flex items-center justify-between">
-        <Link href="/booking">
+        <Link href={`/booking/${service?._id}`}>
           <Button>
             Book Now <ArrowRight />
           </Button>
