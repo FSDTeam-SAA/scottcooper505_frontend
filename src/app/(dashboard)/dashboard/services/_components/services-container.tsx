@@ -2,7 +2,7 @@
 
 import PathTracker from "@/app/(dashboard)/_components/path-tracker";
 import { Button } from "@/components/ui/button";
-import { Eye, Plus, Trash2 } from "lucide-react";
+import { Plus, SquarePen, Trash2 } from "lucide-react";
 import Link from "next/link";
 import React, { useState } from "react";
 import {
@@ -14,8 +14,11 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import ScottcooperPagination from "@/components/ui/ScottcooperPagination";
-import { useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import moment from "moment";
+import DeleteModal from "@/components/modal/DeleteModal";
+import { toast } from "sonner";
+import { useSession } from "next-auth/react";
 
 export interface ServiceResponse {
   status: boolean;
@@ -66,6 +69,11 @@ export interface Schedule {
 
 const ServicesContainer = () => {
   const [currentPage, setCurrentPage] = useState(1);
+  const [deleteModalOpen, setDeleteModalOpen] = useState(false);
+  const [serviceId, setServiceId] = useState<string>("");
+  const queryClient = useQueryClient();
+  const session = useSession();
+  const token = (session?.data?.user as { accessToken: string })?.accessToken;
 
   const { data, isLoading, isError, error } = useQuery<ServiceResponse>({
     queryKey: ["services", currentPage],
@@ -84,6 +92,35 @@ const ServicesContainer = () => {
   });
 
   console.log(data?.data?.services);
+
+  // delete api logic
+  const { mutate: deleteUser } = useMutation({
+    mutationKey: ["delete-service"],
+    mutationFn: (id: string) =>
+      fetch(`${process.env.NEXT_PUBLIC_API_URL}/service/${id}`, {
+        method: "DELETE",
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }).then((res) => res.json()),
+    onSuccess: (data) => {
+      if (!data?.status) {
+        toast.error(data?.message || "Failed to delete service");
+        return;
+      } else {
+        toast.success(data?.message || "Services deleted successfully");
+      }
+      queryClient.invalidateQueries({ queryKey: ["services"] });
+    },
+  });
+
+  // delete modal logic
+  const handleDelete = () => {
+    if (serviceId) {
+      deleteUser(serviceId);
+    }
+    setDeleteModalOpen(false);
+  };
   if (isLoading) {
     return <div>Loading...</div>;
   }
@@ -139,8 +176,15 @@ const ServicesContainer = () => {
                       : "N/A"}
                   </TableCell>
                   <TableCell className="flex items-center justify-center gap-2 text-base font-semibold text-[#424242] leading-[120%] text-center py-[14px]">
-                    <Eye className="w-5 h-5 cursor-pointer" />
-                    <Trash2 className="w-5 h-5 cursor-pointer" />
+                    <SquarePen className="w-5 h-5 cursor-pointer" />
+                    <button
+                      onClick={() => {
+                        setServiceId(service?._id);
+                        setDeleteModalOpen(true);
+                      }}
+                    >
+                      <Trash2 className="w-5 h-5 cursor-pointer" />
+                    </button>
                   </TableCell>
                 </TableRow>
               );
@@ -168,6 +212,17 @@ const ServicesContainer = () => {
               </div>
             )}
         </div>
+      </div>
+
+      <div>
+        {/* delete modal  */}
+        {deleteModalOpen && (
+          <DeleteModal
+            isOpen={deleteModalOpen}
+            onClose={() => setDeleteModalOpen(false)}
+            onConfirm={handleDelete}
+          />
+        )}
       </div>
     </div>
   );
