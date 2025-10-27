@@ -31,9 +31,11 @@ export const Footer = () => {
                   reliability.
                 </p>
 
-                <Button className="mt-4">
-                  Book Now <ArrowRight />
-                </Button>
+                <Link href={'/services'}>
+                  <Button className="mt-4">
+                    Book Now <ArrowRight />
+                  </Button>
+                </Link>
               </div>
             </div>
 
@@ -70,13 +72,16 @@ export const Footer = () => {
         </div>
       </div>
 
-      <div className="container flex items-center justify-between mt-5 text-sm">
+      <div
+        // className="container flex items-center justify-between mt-5 text-sm"
+        className="text-center pt-5"
+      >
         <h1>© 2025 Rage Away, LLC. All rights reserved.</h1>
 
-        <div className="flex items-center gap-2">
+        {/* <div className="flex items-center gap-2">
           <Link href={"/privacy-policy"} className="hover:text-primary hover:underline">Privacy Policy</Link>
           <Link href={"/terms-conditions"} className="hover:text-primary hover:underline">Terms of Service</Link>
-        </div>
+        </div> */}
       </div>
     </div>
   );

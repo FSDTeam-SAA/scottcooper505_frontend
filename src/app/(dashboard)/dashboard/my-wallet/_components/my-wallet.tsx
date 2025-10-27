@@ -3,9 +3,35 @@ import PathTracker from "@/app/(dashboard)/_components/path-tracker";
 import ScottcooperPagination from "@/components/ui/ScottcooperPagination";
 import React, { useState } from "react";
 import WalletTable from "./wallet-table";
+import { useSession } from "next-auth/react";
+import { useQuery } from "@tanstack/react-query";
 
 const MyWallet = () => {
   const [currentPage, setCurrentPage] = useState(1);
+  const session = useSession();
+  const token = (session?.data?.user as { accessToken: string })?.accessToken;
+
+  const { data: allWallet = {} } = useQuery({
+    queryKey: ["all-wallet", currentPage],
+    queryFn: async () => {
+      const res = await fetch(
+        `${process.env.NEXT_PUBLIC_API_URL}/dashboard/my-wallet?page=${currentPage}&limit=10`,
+        {
+          method: "GET",
+          headers: {
+            "content-type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+
+      const data = await res.json();
+
+      return data?.data;
+    },
+    enabled: !!token,
+  });
+
 
   return (
     <div className="space-y-6">
@@ -19,14 +45,14 @@ const MyWallet = () => {
 
           <div className="mt-1 flex items-center gap-2">
             <div className="h-2 w-2 bg-primary rounded-full"></div>
-            <h1 className="text-xl font-bold">$132,570.00</h1>
+            <h1 className="text-xl font-bold">${allWallet?.totalRevenue}</h1>
           </div>
         </div>
       </div>
 
       <div>
         <div className="pb-2">
-          <WalletTable />
+          <WalletTable allWallet={allWallet} />
         </div>
 
         {/* pagination here  */}
