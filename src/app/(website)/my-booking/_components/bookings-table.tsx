@@ -1,4 +1,5 @@
 "use client";
+import ScottcooperPagination from "@/components/ui/ScottcooperPagination";
 import {
   Table,
   TableBody,
@@ -9,6 +10,7 @@ import {
 } from "@/components/ui/table";
 import { useQuery } from "@tanstack/react-query";
 import { useSession } from "next-auth/react";
+import { useState } from "react";
 
 interface Booking {
   _id: string;
@@ -28,11 +30,13 @@ export const BookingsTable = () => {
   const session = useSession();
   const token = (session?.data?.user as { accessToken: string })?.accessToken;
 
+  const [currentPage, setCurrentPage] = useState(1);
+
   const { data: allHistory = {} } = useQuery({
     queryKey: ["all-history"],
     queryFn: async () => {
       const res = await fetch(
-        `${process.env.NEXT_PUBLIC_API_URL}/dashboard/booking-history`,
+        `${process.env.NEXT_PUBLIC_API_URL}/booking/my-bookings`,
         {
           method: "GET",
           headers: {
@@ -48,6 +52,8 @@ export const BookingsTable = () => {
     },
     enabled: !!token,
   });
+
+  const pagination = allHistory?.pagination;
 
   return (
     <div>
@@ -106,6 +112,26 @@ export const BookingsTable = () => {
           )}
         </TableBody>
       </Table>
+
+      <div className="mt-8">
+        {(pagination?.totalPages ?? 0) > 1 && (
+          <div className="flex items-center justify-between">
+            <p className="text-sm md:text-base font-medium text-[#3F3F3F]">
+              Showing page {pagination?.currentPage ?? currentPage} of{" "}
+              {pagination?.totalPages ?? 0} ({pagination?.totalData ?? 0}{" "}
+              results)
+            </p>
+
+            <div>
+              <ScottcooperPagination
+                totalPages={pagination?.totalPages ?? 0}
+                currentPage={pagination?.currentPage ?? currentPage}
+                onPageChange={(page) => setCurrentPage(page)}
+              />
+            </div>
+          </div>
+        )}
+      </div>
     </div>
   );
 };
