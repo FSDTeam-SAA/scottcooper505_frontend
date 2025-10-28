@@ -29,7 +29,7 @@ type FormValues = z.input<typeof formSchema>;
 const SignUpForm = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
-  const router = useRouter()
+  const router = useRouter();
   const form = useForm<FormValues>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -38,10 +38,9 @@ const SignUpForm = () => {
       phoneNumber: "",
       password: "",
       confirmPassword: "",
-      termCondition: false ,
+      termCondition: false,
     },
   });
-
 
   const { mutate, isPending } = useMutation({
     mutationKey: ["sign-up"],
@@ -54,13 +53,13 @@ const SignUpForm = () => {
         body: JSON.stringify(values),
       }).then((res) => res.json()),
     onSuccess: (data) => {
-      if (!data?.success) {
+      if (!data?.status) {
         toast.error(data?.message || "Something went wrong");
         return;
       }
       toast.success(data?.message || "Account created successfully!");
-      form.reset();
       router.push("/login");
+      form.reset();
     },
   });
 
@@ -74,7 +73,6 @@ const SignUpForm = () => {
     };
     mutate(payload);
   }
-
 
   const togglePasswordVisibility = () => {
     setShowPassword(!showPassword);
@@ -268,7 +266,7 @@ const SignUpForm = () => {
                 href="/login"
                 className="text-foreground font-semibold hover:underline hover:text-primary"
               >
-                Sign In 
+                Sign In
               </Link>
             </p>
           </div>
