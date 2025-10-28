@@ -5,6 +5,7 @@ import { useQuery } from "@tanstack/react-query";
 import { useSession } from "next-auth/react";
 import Link from "next/link";
 import { PieChart, Pie, Cell, Tooltip, ResponsiveContainer } from "recharts";
+import DashboardTopServicesSkeleton from "./dashboard-top-service-skeleton";
 
 export interface DashboardStatsResponse {
   success: boolean;
@@ -47,7 +48,7 @@ export function TopServices() {
     },
   });
 
-  if (isLoading) return <h1>Loading...</h1>;
+  if (isLoading) return <DashboardTopServicesSkeleton/>
   if (isError) return <h1>{(error as Error).message}</h1>;
 
   // Safely map dynamic data for the chart
