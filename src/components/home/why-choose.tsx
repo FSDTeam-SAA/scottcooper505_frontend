@@ -4,24 +4,14 @@ import React from "react";
 export const WhyChoose = () => {
   const items = [
     {
-      icon: "/choose-1.png",
-      title: "10-Year Labor Warranties",
-      desc: "Our work is backed by industry-leading warranties that protect your investment for a decade.",
-    },
-    {
       icon: "/choose-2.png",
-      title: "Licensed & Insured",
-      desc: "We maintain all required licenses and insurance for your complete protection and peace of mind.",
+      title: "Insured",
+      desc: "We maintain all required insurance for your complete protection and peace of mind.",
     },
     {
       icon: "/choose-3.png",
-      title: "Family-Owned & Houston-Based",
+      title: "Family-Owned & North-West Tennessee",
       desc: "We're proud to be a local, family-operated business serving our Houston community.",
-    },
-    {
-      icon: "/choose-4.png",
-      title: "Fast Drone-Based Assessments",
-      desc: "Our advanced drone technology provides quick, accurate inspections without ladder climbing",
     },
   ];
 
@@ -35,7 +25,7 @@ export const WhyChoose = () => {
         </p>
       </div>
 
-      <div className="flex flex-col lg:flex-row items-center gap-14">
+      <div className="flex flex-col lg:flex-row items-start gap-14">
         <div className="overflow-hidden rounded-lg">
           <Image
             src={"/why-choose.jpg"}
@@ -46,7 +36,7 @@ export const WhyChoose = () => {
           />
         </div>
 
-        <div className="h-[500px] flex-1 grid grid-cols-1 lg:grid-cols-2 gap-10">
+        <div className="flex-1 grid grid-cols-1 lg:grid-cols-2 gap-10">
           {items.map((item, index) => (
             <div
               key={index}
