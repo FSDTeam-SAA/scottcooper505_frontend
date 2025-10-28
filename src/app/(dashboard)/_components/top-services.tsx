@@ -1,55 +1,116 @@
-"use client"
+"use client";
 
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { PieChart, Pie, Cell, Tooltip, ResponsiveContainer } from "recharts"
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { useQuery } from "@tanstack/react-query";
+import Link from "next/link";
+import { PieChart, Pie, Cell, Tooltip, ResponsiveContainer } from "recharts";
 
-const data = [
-  { name: "Residential 500", value: 500, color: "#ec4899" },
-  { name: "Residential 500", value: 500, color: "#8b5cf6" },
-  { name: "Residential 500", value: 500, color: "#eab308" },
-]
+export interface DashboardStatsResponse {
+  success: boolean;
+  message: string;
+  data: {
+    totalUsers: number;
+    totalServices: number;
+    totalBookings: number;
+    totalRevenue: number;
+    topServices: TopService[];
+  };
+}
 
-const COLORS = ["#ec4899", "#8b5cf6", "#eab308"]
+export interface TopService {
+  totalPayment: number;
+  bookingCount: number;
+  serviceId: string;
+  title: string;
+}
+
+const COLORS = ["#FF557A", "#C79B0C", "#2A9D90"];
 
 export function TopServices() {
-  const total = data.reduce((sum, item) => sum + item.value, 0)
+  const { data, isLoading, isError, error } = useQuery<DashboardStatsResponse>({
+    queryKey: ["dashboard-overview"],
+    queryFn: async () => {
+      const res = await fetch(
+        `${process.env.NEXT_PUBLIC_API_URL}/dashboard/static-data`
+      );
+      if (!res.ok) throw new Error("Failed to fetch dashboard data");
+      return res.json();
+    },
+  });
+
+  if (isLoading) return <h1>Loading...</h1>;
+  if (isError) return <h1>{(error as Error).message}</h1>;
+
+  // Safely map dynamic data for the chart
+  const chartData =
+    data?.data?.topServices?.map((item, index) => ({
+      name: item.title,
+      value: item.totalPayment, // Recharts expects "value"
+      color: COLORS[index % COLORS.length],
+    })) || [];
+
+  const totalRevenue = data?.data?.totalRevenue || 0;
 
   return (
     <Card className="bg-purple-50 border-0 shadow-sm">
       <CardHeader className="pb-4">
         <div className="flex items-center justify-between">
-          <CardTitle className="text-lg font-semibold text-slate-900">Top 3 Services</CardTitle>
-          <button className="text-sm text-purple-600 hover:text-purple-700 font-medium">See all</button>
+          <CardTitle className="text-lg font-bold text-[#131313] leading-[120%]">
+            Top 3 Services
+          </CardTitle>
+          <Link href="/dashboard/services">
+            <button className="text-base text-purple-600 hover:text-purple-700 font-medium hover:underline">
+              See all
+            </button>
+          </Link>
         </div>
       </CardHeader>
-      <CardContent className="space-y-6">
+
+      <CardContent className="space-y-3">
         <div className="flex justify-center">
-          <div className="relative w-48 h-48">
-            <ResponsiveContainer width="100%" height="100%">
+          <div className="relative w-[358px] h-[358px]">
+            <ResponsiveContainer width={358} height={358}>
               <PieChart>
-                <Pie data={data} cx="50%" cy="50%" innerRadius={50} outerRadius={80} paddingAngle={2} dataKey="value">
-                  {data.map((entry, index) => (
-                    <Cell key={`cell-${index}`} fill={COLORS[index]} />
+                <Pie
+                  data={chartData}
+                  cx="50%"
+                  cy="50%"
+                  innerRadius={120}
+                  outerRadius={160}
+                  paddingAngle={2}
+                  dataKey="value"
+                >
+                  {chartData.map((entry, index) => (
+                    <Cell key={`cell-${index}`} fill={entry.color} />
                   ))}
                 </Pie>
                 <Tooltip />
               </PieChart>
             </ResponsiveContainer>
+
             <div className="absolute inset-0 flex flex-col items-center justify-center">
-              <span className="text-2xl font-bold text-slate-900">{total}</span>
-              <span className="text-xs text-slate-500">Total</span>
+              <span className="text-2xl md:text-3xl font-bold text-[#131313] leading-[120%]">
+                {totalRevenue}
+              </span>
+              <span className="text-base text-[#131313] font-semibold leading-[120%]">
+                Total Done Services
+              </span>
             </div>
           </div>
         </div>
-        <div className="space-y-3">
-          {data.map((item, index) => (
+
+        <div className="w-full flex items-center justify-between">
+          {chartData.map((item, index) => (
             <div key={index} className="flex items-center gap-3 text-sm">
-              <div className="w-3 h-3 rounded-full" style={{ backgroundColor: COLORS[index] }} />
+              <div
+                className="w-3 h-3 rounded-full"
+                style={{ backgroundColor: item.color }}
+              />
               <span className="text-slate-600">{item.name}</span>
             </div>
           ))}
         </div>
       </CardContent>
     </Card>
-  )
+  );
 }

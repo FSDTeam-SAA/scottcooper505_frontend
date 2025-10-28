@@ -1,8 +1,41 @@
 "use client";
 
+import { useQuery } from "@tanstack/react-query";
 import Image from "next/image";
 
+export interface DashboardStatsResponse {
+  success: boolean;
+  message: string;
+  data: {
+    totalUsers: number;
+    totalServices: number;
+    totalBookings: number;
+    totalRevenue: number;
+    topServices: TopService[];
+  };
+}
+
+export interface TopService {
+  totalPayment: number;
+  bookingCount: number;
+  serviceId: string;
+  title: string;
+}
+
+
 export function StatCards() {
+
+const {data, isLoading, isError, error} = useQuery<DashboardStatsResponse>({
+  queryKey: ["dashboard-overview"],
+  queryFn: async () =>{
+    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/dashboard/static-data`);
+    return res.json();
+  }
+})
+
+console.log(data)
+if(isLoading) return <h1>Loading...</h1>
+if(isError) return <h1>{error.message}</h1>
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
       <div className="col-span-1 bg-[#EDE7F8] rounded-[8px] p-3">
@@ -12,7 +45,7 @@ export function StatCards() {
         <div className="flex items-center justify-between bg-white rounded-[6px] p-4 ">
           <span>
             <h3 className="text-xl md:text-2xl font-semibold text-[#131313] leading-[120%]">
-              132,570
+              ${data?.data?.totalRevenue || 0}
             </h3>
             <p className="flex items-center gap-1 text-base font-normal text-[#424242] pt-2">
               <Image
@@ -43,7 +76,7 @@ export function StatCards() {
         <div className="flex items-center justify-between bg-white rounded-[6px] p-4 ">
           <span>
             <h3 className="text-xl md:text-2xl font-semibold text-[#131313] leading-[120%]">
-              10
+              {data?.data?.totalServices || 0}
             </h3>
             <p className="flex items-center gap-1 text-base font-normal text-[#424242] pt-2">
               <Image
@@ -74,7 +107,7 @@ export function StatCards() {
         <div className="flex items-center justify-between bg-white rounded-[6px] p-4 ">
           <span>
             <h3 className="text-xl md:text-2xl font-semibold text-[#131313] leading-[120%]">
-              132,570
+              {data?.data?.totalUsers || 0}
             </h3>
             <p className="flex items-center gap-1 text-base font-normal text-[#424242] pt-2">
               <Image
@@ -105,7 +138,7 @@ export function StatCards() {
         <div className="flex items-center justify-between bg-white rounded-[6px] p-4 ">
           <span>
             <h3 className="text-xl md:text-2xl font-semibold text-[#131313] leading-[120%]">
-              132,570
+              {data?.data?.totalBookings || 0}
             </h3>
             <p className="flex items-center gap-1 text-base font-normal text-[#424242] pt-2">
               <Image
