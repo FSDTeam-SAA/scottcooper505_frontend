@@ -1,6 +1,7 @@
 "use client";
 
 import { useQuery } from "@tanstack/react-query";
+import { useSession } from "next-auth/react";
 import Image from "next/image";
 
 export interface DashboardStatsResponse {
@@ -24,11 +25,18 @@ export interface TopService {
 
 
 export function StatCards() {
-
+  const session = useSession();
+  const token = (session?.data?.user as { accessToken: string })?.accessToken;
 const {data, isLoading, isError, error} = useQuery<DashboardStatsResponse>({
   queryKey: ["dashboard-overview"],
   queryFn: async () =>{
-    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/dashboard/static-data`);
+    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/dashboard/static-data`,{
+      method: "GET",
+      headers: {
+        "content-type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+    });
     return res.json();
   }
 })
