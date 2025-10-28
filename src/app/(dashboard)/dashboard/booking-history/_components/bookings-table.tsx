@@ -69,7 +69,7 @@ const BookingsTable = ({ allHistory }: Props) => {
                 </TableCell>
 
                 <TableCell>
-                  <button className="py-1 px-5 rounded-3xl bg-[#058001] text-white font-bold">
+                  <button className="py-1 px-5 rounded-3xl bg-[#058001] text-white font-bold cursor-default">
                     {booking?.bookingStatus}
                   </button>
                 </TableCell>

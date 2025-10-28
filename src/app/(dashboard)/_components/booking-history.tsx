@@ -61,19 +61,21 @@ export function BookingHistory() {
     <div>
       <Card className="bg-[#EDE7F8] rounded-[8px] px-6 pb-[10px]">
         <CardHeader className="">
-          <div className="flex items-center justify-between">
-            <CardTitle className="text-lg font-bold text-[#131313] leading-[120%]">
+          <div className="w-full flex items-center justify-between">
+            <CardTitle className="text-base font-bold text-[#131313] leading-[120%]">
               Top 5 Booking History
             </CardTitle>
-            <Link href="/dashboard/booking-history">
+            <div>
+              <Link href="/dashboard/booking-history">
               <button className="text-base text-[#4D0EB9] bg-[#C8B4E9] py-2 px-4 rounded-[8px] font-bold hover:underline">
                 See all
               </button>
             </Link>
+            </div>
           </div>
         </CardHeader>
 
-        <CardContent className=" bg-white rounded-[8px] p-6">
+        <CardContent className=" bg-white rounded-[8px] p-6 ">
           <Table>
             <TableHeader>
               <TableRow className="border border-[#B6B6B6]">
