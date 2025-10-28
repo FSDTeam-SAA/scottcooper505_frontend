@@ -4,7 +4,7 @@ const page = () => {
   return (
     <div className="min-h-[calc(100vh-400px)] mt-40 container">
       <div>
-        <h1 className="text-center font-medium text-3xl">My Bookings</h1>
+        <h1 className="text-center font-medium text-3xl mb-8">My Bookings</h1>
       </div>
 
       <div>
