@@ -24,6 +24,7 @@ import {
 import Link from "next/link";
 import Image from "next/image";
 import { usePathname } from "next/navigation";
+import { signOut } from "next-auth/react";
 
 // Menu items.
 const items = [
@@ -66,6 +67,12 @@ const items = [
 
 export function AppSidebar() {
   const pathName = usePathname();
+
+    const handleLogout = () => {
+    signOut({
+      callbackUrl: "/login", 
+    });
+  };
 
   return (
     <Sidebar>
@@ -115,7 +122,7 @@ export function AppSidebar() {
             </SidebarMenu>
 
             <SidebarFooter className="border-t border-gray-300">
-              <button className="font-medium text-red-500 flex items-center gap-2">
+              <button  onClick={handleLogout} className="font-medium text-red-500 flex items-center gap-2">
                 <LogOut className="h-4 w-4" /> Log out
               </button>
             </SidebarFooter>

@@ -185,7 +185,7 @@ const ServicesContainer = () => {
                         setDeleteModalOpen(true);
                       }}
                     >
-                      <Trash2 className="w-5 h-5 cursor-pointer" />
+                      <Trash2 className="w-5 h-5 cursor-pointer text-red-500" />
                     </button>
                   </TableCell>
                 </TableRow>

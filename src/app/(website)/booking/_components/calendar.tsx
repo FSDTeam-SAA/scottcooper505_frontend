@@ -47,8 +47,8 @@ export default function Calendar({ availableDates, selectedDate, onSelectDate }:
     <div className="space-y-4">
       {/* Month Navigation */}
       <div className="flex items-center justify-between mb-6">
-        <h3 className="text-base font-semibold text-foreground">{monthName}</h3>
-        <div className="flex gap-2">
+      
+        <div className="w-full flex items-center justify-between gap-2">
           <Button
             variant="outline"
             size="sm"
@@ -57,6 +57,7 @@ export default function Calendar({ availableDates, selectedDate, onSelectDate }:
           >
             <ChevronLeft className="w-4 h-4" />
           </Button>
+            <h3 className="text-base md:text-lg font-bold text-[#1F2937] leading-[120%]">{monthName}</h3>
           <Button
             variant="outline"
             size="sm"
