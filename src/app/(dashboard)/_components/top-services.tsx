@@ -55,7 +55,7 @@ export function TopServices() {
     <Card className="bg-[#EDE7F8] rounded-[8px]">
       <CardHeader className="pb-4">
         <div className="flex items-center justify-between">
-          <CardTitle className="text-lg font-bold text-[#131313] leading-[120%]">
+          <CardTitle className="text-base font-bold text-[#131313] leading-[120%]">
             Top 3 Services
           </CardTitle>
           <Link href="/dashboard/services">
@@ -66,7 +66,7 @@ export function TopServices() {
         </div>
       </CardHeader>
 
-      <CardContent className="space-y-3">
+      <CardContent className="space-y-0">
         <div className="flex justify-center">
           <div className="relative w-[358px] h-[358px]">
             <ResponsiveContainer width={358} height={358}>
