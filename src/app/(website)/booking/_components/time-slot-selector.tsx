@@ -30,9 +30,9 @@ export default function TimeSlotSelector({ slots, selectedSlot, onSelectSlot }: 
               }
             `}
           >
-            <div className="text-center">
-              <div className="font-semibold">{slot.startTime}</div>
-              <div className="text-xs opacity-75">- {slot.endTime}</div>
+            <div className="flex items-center justify-center">
+              <div className="text-base text-black font-semibold">{slot.startTime}</div>
+              <div className="text-base text-black font-semibold">- {slot.endTime}</div>
             </div>
           </button>
         )

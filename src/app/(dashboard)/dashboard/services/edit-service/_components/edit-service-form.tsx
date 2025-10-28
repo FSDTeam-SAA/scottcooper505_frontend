@@ -82,7 +82,13 @@ const formSchema = z.object({
   title: z.string().min(2, "Title must be at least 2 characters."),
   price: z.coerce.number().positive("Price must be a positive number"),
   description: z.string().min(2, "Description must be at least 2 characters."),
-  duration: z.string().min(1, "Duration is required"),
+  duration: z
+    .string()
+    .min(1, "Duration is required")
+    .regex(
+      /^(?:\d+h(?:\d+m)?|\d+m)$/,
+      "Duration must include time unit — use 'm' for minutes or 'h' for hours (e.g., 30m, 1h)"
+    ),
   thumbnail: z.instanceof(File).optional(),
   schedule: z.array(scheduleSchema).min(1, "At least one schedule is required"),
 });
@@ -165,9 +171,9 @@ export default function EditServiceForm({ serviceId }: { serviceId: string }) {
       setPreviewImage(data.data.thumbnail);
       form.setValue(
         "schedule",
-        data.data.schedule.map(schedule => ({
+        data.data.schedule.map((schedule) => ({
           ...schedule,
-          date: new Date(schedule.date)
+          date: new Date(schedule.date),
         }))
       );
     }
@@ -223,6 +229,17 @@ export default function EditServiceForm({ serviceId }: { serviceId: string }) {
       <div className="pt-8 md:pt-10">
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
+             {/* Submit Button */}
+            <div className="flex justify-end">
+              <Button
+                disabled={isPending}
+                type="submit"
+                size="lg"
+                className="px-8"
+              >
+                {isPending ? "Publishing..." : "Publish"}
+              </Button>
+            </div>
             {/* ---------- GRID LAYOUT ---------- */}
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
               {/* ---------- LEFT COLUMN ---------- */}
@@ -233,7 +250,7 @@ export default function EditServiceForm({ serviceId }: { serviceId: string }) {
                   name="title"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel className="text-base font-semibold">
+                      <FormLabel className="text-base font-semibold text-black leading-[120%]">
                         Service Title
                       </FormLabel>
                       <FormControl>
@@ -255,8 +272,8 @@ export default function EditServiceForm({ serviceId }: { serviceId: string }) {
                     name="price"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel className="text-base font-semibold">
-                          Price ($)
+                        <FormLabel className="text-base font-semibold text-black leading-[120%]">
+                          Price
                         </FormLabel>
                         <FormControl>
                           <Input
@@ -275,7 +292,7 @@ export default function EditServiceForm({ serviceId }: { serviceId: string }) {
                     name="duration"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel className="text-base font-semibold">
+                        <FormLabel className="text-base font-semibold text-black leading-[120%]">
                           Duration
                         </FormLabel>
                         <FormControl>
@@ -297,7 +314,7 @@ export default function EditServiceForm({ serviceId }: { serviceId: string }) {
                     {/* <FormLabel className="text-base font-semibold">
                       Availability Schedule
                     </FormLabel> */}
-                    <h3 className="text-base font-semibold">
+                    <h3 className="text-base font-semibold text-black leading-[120%]">
                       Availability Schedule
                     </h3>
                     <Button
@@ -324,6 +341,9 @@ export default function EditServiceForm({ serviceId }: { serviceId: string }) {
                         name={`schedule.${idx}.date`}
                         render={({ field }) => (
                           <FormItem>
+                            <FormLabel className="text-base font-semibold text-black leading-[120%]">
+                              Date
+                            </FormLabel>
                             <Popover>
                               <PopoverTrigger asChild>
                                 <FormControl>
@@ -363,6 +383,9 @@ export default function EditServiceForm({ serviceId }: { serviceId: string }) {
                         name={`schedule.${idx}.startTime`}
                         render={({ field }) => (
                           <FormItem>
+                            <FormLabel className="text-base font-semibold text-black leading-[120%]">
+                              Start Time
+                            </FormLabel>
                             <FormControl>
                               <Input type="time" className="h-12" {...field} />
                             </FormControl>
@@ -378,6 +401,9 @@ export default function EditServiceForm({ serviceId }: { serviceId: string }) {
                           name={`schedule.${idx}.endTime`}
                           render={({ field }) => (
                             <FormItem className="flex-1">
+                              <FormLabel className="text-base font-semibold text-black leading-[120%]">
+                                End Time
+                              </FormLabel>
                               <FormControl>
                                 <Input
                                   type="time"
@@ -417,7 +443,7 @@ export default function EditServiceForm({ serviceId }: { serviceId: string }) {
                   name="description"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel className="text-base font-semibold">
+                      <FormLabel className="text-base font-semibold text-black leading-[120%]">
                         Description
                       </FormLabel>
                       <FormControl>
@@ -440,8 +466,8 @@ export default function EditServiceForm({ serviceId }: { serviceId: string }) {
                   name="thumbnail"
                   render={() => (
                     <FormItem>
-                      <FormLabel className="text-base font-semibold">
-                        Service Image
+                      <FormLabel className="text-base font-semibold text-black leading-[120%]">
+                        Image
                       </FormLabel>
                       <FormControl>
                         <div className="relative">
@@ -537,17 +563,7 @@ export default function EditServiceForm({ serviceId }: { serviceId: string }) {
               </div>
             </div>
 
-            {/* Submit Button */}
-            <div className="flex justify-end">
-              <Button
-                disabled={isPending}
-                type="submit"
-                size="lg"
-                className="px-8"
-              >
-                {isPending ? "Publishing..." : "Publish"}
-              </Button>
-            </div>
+           
           </form>
         </Form>
       </div>
