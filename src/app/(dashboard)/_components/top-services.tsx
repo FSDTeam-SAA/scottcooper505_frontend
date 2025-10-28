@@ -52,14 +52,14 @@ export function TopServices() {
   const totalRevenue = data?.data?.totalRevenue || 0;
 
   return (
-    <Card className="bg-purple-50 border-0 shadow-sm">
+    <Card className="bg-[#EDE7F8] rounded-[8px]">
       <CardHeader className="pb-4">
         <div className="flex items-center justify-between">
           <CardTitle className="text-lg font-bold text-[#131313] leading-[120%]">
             Top 3 Services
           </CardTitle>
           <Link href="/dashboard/services">
-            <button className="text-base text-purple-600 hover:text-purple-700 font-medium hover:underline">
+             <button className="text-base text-[#4D0EB9] bg-[#C8B4E9] py-2 px-4 rounded-[8px] font-bold hover:underline">
               See all
             </button>
           </Link>
