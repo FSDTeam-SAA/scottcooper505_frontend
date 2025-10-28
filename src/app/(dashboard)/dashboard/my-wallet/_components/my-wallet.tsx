@@ -32,6 +32,7 @@ const MyWallet = () => {
     enabled: !!token,
   });
 
+  const pagination = allWallet?.pagination;
 
   return (
     <div className="space-y-6">
@@ -56,19 +57,23 @@ const MyWallet = () => {
         </div>
 
         {/* pagination here  */}
-        <div className="bg-transparent flex items-center justify-between p-4 bg-white">
-          <p className="text-sm md:text-base font-medium leading-[120%]  text-[#3F3F3F]">
-            Showing {currentPage}
-            of 259 results
-          </p>
-          <div>
-            <ScottcooperPagination
-              totalPages={3}
-              currentPage={currentPage}
-              onPageChange={(page) => setCurrentPage(page)}
-            />
+        {(pagination?.totalPages ?? 0) > 1 && (
+          <div className="flex items-center justify-between">
+            <p className="text-sm md:text-base font-medium text-[#3F3F3F]">
+              Showing page {pagination?.currentPage ?? currentPage} of{" "}
+              {pagination?.totalPages ?? 0} ({pagination?.totalData ?? 0}{" "}
+              results)
+            </p>
+
+            <div>
+              <ScottcooperPagination
+                totalPages={pagination?.totalPages ?? 0}
+                currentPage={pagination?.currentPage ?? currentPage}
+                onPageChange={(page) => setCurrentPage(page)}
+              />
+            </div>
           </div>
-        </div>
+        )}
       </div>
     </div>
   );
