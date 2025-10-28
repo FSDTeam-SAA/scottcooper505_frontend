@@ -12,7 +12,7 @@ export const BookingHistory = () => {
   const session = useSession();
   const token = (session?.data?.user as { accessToken: string })?.accessToken;
 
-  const { data: allHistory = {} } = useQuery({
+  const { data: history = {} } = useQuery({
     queryKey: ["all-history"],
     queryFn: async () => {
       const res = await fetch(
@@ -33,6 +33,7 @@ export const BookingHistory = () => {
     enabled: !!token,
   });
 
+  const allHistory = history?.bookings;
   const pagination = allHistory?.pagination;
 
   return (
