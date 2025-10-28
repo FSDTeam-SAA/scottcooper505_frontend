@@ -89,11 +89,11 @@ export function TopServices() {
             </ResponsiveContainer>
 
             <div className="absolute inset-0 flex flex-col items-center justify-center">
-              <span className="text-2xl md:text-3xl font-bold text-[#131313] leading-[120%]">
-                {totalRevenue}
-              </span>
               <span className="text-base text-[#131313] font-semibold leading-[120%]">
                 Total Done Services
+              </span>
+              <span className="text-2xl md:text-3xl font-bold text-[#131313] leading-[120%]">
+                {totalRevenue}
               </span>
             </div>
           </div>
