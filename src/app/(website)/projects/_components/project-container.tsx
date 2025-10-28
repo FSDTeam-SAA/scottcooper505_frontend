@@ -9,6 +9,8 @@ import Image from "next/image";
 import React, { useState } from "react";
 import { Skeleton } from "@/components/ui/skeleton";
 import { getTruncatedText } from "@/utils/getTruncatedText";
+import { Input } from "@/components/ui/input";
+import { useDebounce } from "@/hooks/useDebounce";
 
 interface Project {
   _id: string;
@@ -36,20 +38,23 @@ interface ProjectResponse {
 }
 
 const projectTypeLists = [
-  { id: 1, name: "INDUSTRY", value: "industry" },
-  { id: 2, name: "HEMP/CBD", value: "cbd" },
-  { id: 3, name: "RECREATIONAL CANNABIS", value: "recreational" },
+  { id: 1, name: "RESIDENTIAL", value: "residential" },
+  { id: 2, name: "COMMERCIAL", value: "commercial" },
+  { id: 3, name: "INDUSTRIAL", value: "industrial" },
+  { id: 4, name: "AGRICULTURAL", value: "agricultural" },
 ];
 
 const ProjectContainer = () => {
   const [projectType, setProjectType] = useState<string>("");
+  const [location, setLocation] = useState("");
+  const debouncedLocation = useDebounce(location, 300);
   const [currentPage, setCurrentPage] = useState(1);
 
   const { data: allProject, isLoading } = useQuery<ProjectResponse>({
-    queryKey: ["all-project", currentPage],
+    queryKey: ["all-project", currentPage, debouncedLocation, projectType],
     queryFn: async () => {
       const res = await fetch(
-        `${process.env.NEXT_PUBLIC_API_URL}/project?page=${currentPage}&limit=6`
+        `${process.env.NEXT_PUBLIC_API_URL}/project?page=${currentPage}&limit=6&location=${debouncedLocation}&areaType=${projectType}`
       );
       const json = await res.json();
       return json.data;
@@ -84,11 +89,10 @@ const ProjectContainer = () => {
             <h4 className="text-base md:text-lg font-semibold text-[#5B6574] pb-2">
               Location
             </h4>
-            <ScottcooperDropdownSelector
-              list={projectTypeLists}
-              selectedValue={projectType}
-              onValueChange={setProjectType}
-              placeholderText="All Location"
+            <Input
+              className="h-[56px] bg-white rounded-[8px] text-[#5B6574] text-base md:text-lg font-semibold leading-[120%] border border-[#B3B8BF]"
+              placeholder="Enter a location"
+              onChange={(e) => setLocation(e.target.value)}
             />
           </div>
         </div>
@@ -104,7 +108,7 @@ const ProjectContainer = () => {
               </div>
             ))}
           </div>
-        ) : (
+        ) : properties.length > 0 ? (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 pt-10">
             {properties.map((project) => {
               const hasVideo = project.videos?.length > 0;
@@ -145,7 +149,6 @@ const ProjectContainer = () => {
                         </div>
                       </DialogTrigger>
 
-                      {/* Modal Content */}
                       <DialogContent className="max-w-4xl p-0 overflow-hidden">
                         {hasVideo ? (
                           <video
@@ -189,6 +192,15 @@ const ProjectContainer = () => {
                 </div>
               );
             })}
+          </div>
+        ) : (
+          <div className="text-center py-16">
+            <h4 className="text-lg md:text-xl font-semibold text-gray-600">
+              No data found
+            </h4>
+            <p className="text-sm md:text-base text-gray-500 mt-2">
+              Try adjusting your filters or search terms.
+            </p>
           </div>
         )}
 

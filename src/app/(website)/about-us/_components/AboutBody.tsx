@@ -1,7 +1,7 @@
 "use client";
 import Image from "next/image";
 import { Card, CardContent } from "@/components/ui/card";
-import { Award, CheckCircle, Shield, Users } from "lucide-react";
+import { CheckCircle, Shield, Users } from "lucide-react";
 import { useSession } from "next-auth/react";
 
 export default function AboutPage() {
@@ -239,7 +239,7 @@ export default function AboutPage() {
       </section>
 
       {/* Certifications & Achievements Section */}
-      <section className="pt-16 pb-20">
+      {/* <section className="pt-16 pb-20">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-12">
             <h2 className="text-3xl font-bold text-purple-600 mb-2">
@@ -295,7 +295,7 @@ export default function AboutPage() {
             </Card>
           </div>
         </div>
-      </section>
+      </section> */}
     </main>
   );
 }
