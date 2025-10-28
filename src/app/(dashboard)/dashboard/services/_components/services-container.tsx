@@ -128,6 +128,8 @@ const ServicesContainer = () => {
     return <div>Error: {error?.message}</div>;
   }
 
+  // <TableSkeletonWrapper count={5} width="100%" height="120px" className="bg-white" />
+
   return (
     <div>
       <div className="flex items-center justify-between  p-5">
