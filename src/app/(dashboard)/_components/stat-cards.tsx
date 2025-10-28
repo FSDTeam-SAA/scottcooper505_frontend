@@ -3,6 +3,7 @@
 import { useQuery } from "@tanstack/react-query";
 import { useSession } from "next-auth/react";
 import Image from "next/image";
+import DashboardOverviewSkeleton from "./dashboard-overview-skeleton";
 
 export interface DashboardStatsResponse {
   success: boolean;
@@ -42,7 +43,7 @@ const {data, isLoading, isError, error} = useQuery<DashboardStatsResponse>({
 })
 
 console.log(data)
-if(isLoading) return <h1>Loading...</h1>
+if(isLoading) return <DashboardOverviewSkeleton/>
 if(isError) return <h1>{error.message}</h1>
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">

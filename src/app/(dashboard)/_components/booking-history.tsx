@@ -12,6 +12,7 @@ import moment from "moment";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import Link from "next/link";
 import { useSession } from "next-auth/react";
+import DashboardBookingHistorySkeleton from "./dashboard-booking-history-skeleton";
 
 export interface BookingsResponse {
   status: boolean;
@@ -65,7 +66,7 @@ export function BookingHistory() {
   });
 
   console.log(data?.data);
-  if (isLoading) return <div>Loading...</div>;
+  if (isLoading) return <DashboardBookingHistorySkeleton/>
   if (isError) return <div>Error: {error.message}</div>;
   return (
     <div>
