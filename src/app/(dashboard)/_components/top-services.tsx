@@ -2,6 +2,7 @@
 
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { useQuery } from "@tanstack/react-query";
+import { useSession } from "next-auth/react";
 import Link from "next/link";
 import { PieChart, Pie, Cell, Tooltip, ResponsiveContainer } from "recharts";
 
@@ -27,11 +28,19 @@ export interface TopService {
 const COLORS = ["#FF557A", "#C79B0C", "#2A9D90"];
 
 export function TopServices() {
+    const session = useSession();
+    const token = (session?.data?.user as { accessToken: string })?.accessToken;
   const { data, isLoading, isError, error } = useQuery<DashboardStatsResponse>({
     queryKey: ["dashboard-overview"],
     queryFn: async () => {
       const res = await fetch(
-        `${process.env.NEXT_PUBLIC_API_URL}/dashboard/static-data`
+        `${process.env.NEXT_PUBLIC_API_URL}/dashboard/static-data`,{
+          method: "GET",
+          headers: {
+            "content-type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+        }
       );
       if (!res.ok) throw new Error("Failed to fetch dashboard data");
       return res.json();

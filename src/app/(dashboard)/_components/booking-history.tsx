@@ -11,6 +11,7 @@ import { useQuery } from "@tanstack/react-query";
 import moment from "moment";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import Link from "next/link";
+import { useSession } from "next-auth/react";
 
 export interface BookingsResponse {
   status: boolean;
@@ -46,11 +47,20 @@ export interface Pagination {
 }
 
 export function BookingHistory() {
+
+  const session = useSession();
+  const token = (session?.data?.user as { accessToken: string })?.accessToken;
   const { data, isLoading, isError, error } = useQuery<BookingsResponse>({
     queryKey: ["booking-history"],
     queryFn: () =>
       fetch(
-        `${process.env.NEXT_PUBLIC_API_URL}/dashboard/booking-history?page=1&limit=5`
+        `${process.env.NEXT_PUBLIC_API_URL}/dashboard/booking-history`,{
+          method: "GET",
+          headers: {
+            "content-type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+        }
       ).then((res) => res.json()),
   });
 
@@ -98,7 +108,7 @@ export function BookingHistory() {
             </TableHeader>
             <TableBody className="border border-[#B6B6B6]">
               {data?.data?.bookings && data.data.bookings?.length > 0 ? (
-                data.data.bookings?.map((booking) => (
+                data.data.bookings?.slice(0, 5).map((booking) => (
                   <TableRow
                     key={booking._id}
                     className="border border-[#B6B6B6]"
