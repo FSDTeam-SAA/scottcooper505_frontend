@@ -6,6 +6,7 @@ import { useSession } from "next-auth/react";
 import Link from "next/link";
 import { PieChart, Pie, Cell, Tooltip, ResponsiveContainer } from "recharts";
 import DashboardTopServicesSkeleton from "./dashboard-top-service-skeleton";
+import ErrorContainer from "@/components/shared/ErrorContainer/ErrorContainer";
 
 export interface DashboardStatsResponse {
   success: boolean;
@@ -49,7 +50,7 @@ export function TopServices() {
   });
 
   if (isLoading) return <DashboardTopServicesSkeleton/>
-  if (isError) return <h1>{(error as Error).message}</h1>;
+  if (isError) return  <ErrorContainer message={error?.message ?? "Failed to get data"} />
 
   // Safely map dynamic data for the chart
   const chartData =

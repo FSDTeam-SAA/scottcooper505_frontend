@@ -13,6 +13,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import Link from "next/link";
 import { useSession } from "next-auth/react";
 import DashboardBookingHistorySkeleton from "./dashboard-booking-history-skeleton";
+import ErrorContainer from "@/components/shared/ErrorContainer/ErrorContainer";
 
 export interface BookingsResponse {
   status: boolean;
@@ -67,7 +68,7 @@ export function BookingHistory() {
 
   console.log(data?.data);
   if (isLoading) return <DashboardBookingHistorySkeleton/>
-  if (isError) return <div>Error: {error.message}</div>;
+  if (isError) return <ErrorContainer message={error?.message ?? "Failed to get data"} />
   return (
     <div>
       <Card className="bg-[#EDE7F8] rounded-[8px] px-6 pb-[10px]">
