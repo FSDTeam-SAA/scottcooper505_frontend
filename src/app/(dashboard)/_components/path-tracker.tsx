@@ -19,14 +19,17 @@ const PathTracker = () => {
   const pathname = usePathname();
   const segments = pathname.split("/").filter(Boolean);
 
-  const isEditPage = pathname.startsWith("/dashboard/projects/edit-project/");
+  const isEditProjectPage = pathname.startsWith("/dashboard/projects/edit-project/");
+  const isEditServicePage = pathname.startsWith("/dashboard/services/edit-service/");
 
   return (
     <div className="text-xl">
       <div>
         <h1 className="font-semibold">
-          {isEditPage
+          {isEditProjectPage
             ? "Edit Project"
+            : isEditServicePage
+            ? "Edit Service"
             : segments.length
             ? capitalize(segments[segments.length - 1])
             : "Home"}
@@ -46,18 +49,22 @@ const PathTracker = () => {
               const href = "/" + segments.slice(0, index + 1).join("/");
               const isLast = index === segments.length - 1;
 
-              const displaySegment =
-                isEditPage && isLast ? "" : capitalize(segment);
+              // hide the last segment if it’s the dynamic ID part of edit page
+              const shouldHide =
+                (isEditProjectPage && index === segments.length - 1) ||
+                (isEditServicePage && index === segments.length - 1);
+
+              if (shouldHide) return null;
 
               return (
                 <Fragment key={index}>
                   <BreadcrumbSeparator />
                   <BreadcrumbItem>
                     {isLast ? (
-                      <BreadcrumbPage>{displaySegment}</BreadcrumbPage>
+                      <BreadcrumbPage>{capitalize(segment)}</BreadcrumbPage>
                     ) : (
                       <BreadcrumbLink asChild>
-                        <Link href={href}>{displaySegment}</Link>
+                        <Link href={href}>{capitalize(segment)}</Link>
                       </BreadcrumbLink>
                     )}
                   </BreadcrumbItem>
