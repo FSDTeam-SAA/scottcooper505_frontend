@@ -15,7 +15,7 @@ import { useState } from "react";
 interface Booking {
   _id: string;
   user: string;
-  service: {
+  serviceId: {
     title: string;
     price: number;
   };
@@ -32,7 +32,7 @@ export const BookingsTable = () => {
 
   const [currentPage, setCurrentPage] = useState(1);
 
-  const { data: allHistory = {} } = useQuery({
+  const { data: bookings = {} } = useQuery({
     queryKey: ["all-history"],
     queryFn: async () => {
       const res = await fetch(
@@ -53,6 +53,7 @@ export const BookingsTable = () => {
     enabled: !!token,
   });
 
+  const allHistory = bookings?.bookings;
   const pagination = allHistory?.pagination;
 
   return (
@@ -67,9 +68,6 @@ export const BookingsTable = () => {
               Price
             </TableHead>
             <TableHead className="text-center text-black font-semibold">
-              Email
-            </TableHead>
-            <TableHead className="text-center text-black font-semibold">
               Date
             </TableHead>
             <TableHead className="text-center text-black font-semibold">
@@ -82,9 +80,8 @@ export const BookingsTable = () => {
           {allHistory?.length > 0 ? (
             allHistory.map((booking: Booking) => (
               <TableRow key={booking?._id} className="border-b border-gray-300">
-                <TableCell>{booking.service?.title || "N/A"}</TableCell>
-                <TableCell>${booking.service?.price?.toFixed(2)}</TableCell>
-                <TableCell>{booking?.user}</TableCell>
+                <TableCell>{booking?.serviceId?.title || "N/A"}</TableCell>
+                <TableCell>${booking?.serviceId?.price?.toFixed(2)}</TableCell>
                 <TableCell>
                   {new Date(booking?.createdAt).toLocaleString("en-US", {
                     month: "2-digit",

@@ -62,11 +62,11 @@ export const Review = () => {
                 <div>
                   <Image
                     src={
-                      review.user.profileImage
-                        ? review.user.profileImage
+                      review?.user?.profileImage
+                        ? review?.user?.profileImage
                         : "/testimonials.png"
                     }
-                    alt={review.user.name}
+                    alt={review.user?.name}
                     width={1000}
                     height={1000}
                     className="object-cover w-12 h-12 rounded-full"
@@ -76,17 +76,17 @@ export const Review = () => {
                 <div>
                   <Rating
                     style={{ maxWidth: 100 }}
-                    value={review.rating}
+                    value={review?.rating}
                     readOnly
                   />
                   <p className="lg:max-w-lg text-sm opacity-75 mt-2">
-                    {review.comment}
+                    {review?.comment}
                   </p>
 
                   <div className="mt-5">
-                    <h1 className="font-medium">{review.user.name}</h1>
+                    <h1 className="font-medium">{review?.user?.name}</h1>
                     <p className="text-sm opacity-75">
-                      {new Date(review.createdAt).toLocaleDateString("en-US", {
+                      {new Date(review?.createdAt).toLocaleDateString("en-US", {
                         year: "numeric",
                         month: "long",
                         day: "numeric",
