@@ -211,15 +211,33 @@ export default function EditServiceForm({ serviceId }: { serviceId: string }) {
     return <div>{error.message}</div>;
   }
 
+  // const onSubmit = (values: FormValues) => {
+  //   console.log("Form values (design preview):", values);
+  //   const formData = new FormData();
+  //   formData.append("title", values.title);
+  //   formData.append("price", values.price.toString());
+  //   formData.append("description", values.description);
+  //   formData.append("duration", values.duration);
+  //   formData.append("thumbnail", values.thumbnail as File);
+  //   formData.append("schedule", JSON.stringify(values.schedule));
+  //   mutate(formData);
+  // };
+
   const onSubmit = (values: FormValues) => {
-    console.log("Form values (design preview):", values);
     const formData = new FormData();
     formData.append("title", values.title);
     formData.append("price", values.price.toString());
     formData.append("description", values.description);
     formData.append("duration", values.duration);
-    formData.append("thumbnail", values.thumbnail as File);
-    formData.append("schedule", JSON.stringify(values.schedule));
+    if (values.thumbnail) formData.append("thumbnail", values.thumbnail);
+
+    const normalizedSchedule = values.schedule.map((item) => ({
+      date: format(item.date, "yyyy-MM-dd"),
+      startTime: item.startTime,
+      endTime: item.endTime,
+    }));
+
+    formData.append("schedule", JSON.stringify(normalizedSchedule));
     mutate(formData);
   };
 
@@ -229,7 +247,7 @@ export default function EditServiceForm({ serviceId }: { serviceId: string }) {
       <div className="pt-8 md:pt-10">
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
-             {/* Submit Button */}
+            {/* Submit Button */}
             <div className="flex justify-end">
               <Button
                 disabled={isPending}
@@ -562,8 +580,6 @@ export default function EditServiceForm({ serviceId }: { serviceId: string }) {
                 />
               </div>
             </div>
-
-           
           </form>
         </Form>
       </div>

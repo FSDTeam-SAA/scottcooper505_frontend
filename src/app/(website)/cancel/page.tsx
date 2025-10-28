@@ -4,7 +4,7 @@ import React from "react";
 const CancelPage = () => {
   return (
     <div className="h-screen w-full flex flex-col items-center justify-center">
-      <h2 className="text-3xl font-bold text-center text-black">
+      <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold text-center text-red-500">
         Booking Cancelled
       </h2>
       <div className="mt-10">
