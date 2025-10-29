@@ -64,6 +64,7 @@ export function BookingHistory() {
           },
         }
       ).then((res) => res.json()),
+      enabled: !!token
   });
 
   console.log(data?.data);
