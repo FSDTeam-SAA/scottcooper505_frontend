@@ -2,15 +2,12 @@ import { ContactUsForm } from "@/components/home/contact-us-form";
 import {
   Clock4,
   Facebook,
-  Instagram,
-  Linkedin,
   Mail,
   MapPin,
   Phone,
-  Twitter,
-  Youtube,
 } from "lucide-react";
 import dynamic from "next/dynamic";
+import Link from "next/link";
 import React from "react";
 
 const ServiceArea = dynamic(() => import("./_components/service-area"), {
@@ -94,11 +91,16 @@ const Page = () => {
                 <h1 className="font-medium mb-2 text-xl">Connect With Us</h1>
 
                 <div className="flex items-center gap-5 mt-2">
-                  <div className="bg-[#9a9a9c34] h-12 w-12 rounded-full flex flex-col items-center justify-center">
-                    <Facebook className="text-blue-500" />
-                  </div>
+                  <Link
+                    href={`https://www.facebook.com/RageAwaySession/`}
+                    target="_blank"
+                  >
+                    <div className="bg-[#9a9a9c34] h-12 w-12 rounded-full flex flex-col items-center justify-center">
+                      <Facebook className="text-blue-500" />
+                    </div>
+                  </Link>
 
-                  <div className="bg-[#9a9a9c34] h-12 w-12 rounded-full flex flex-col items-center justify-center">
+                  {/* <div className="bg-[#9a9a9c34] h-12 w-12 rounded-full flex flex-col items-center justify-center">
                     <Twitter className="text-blue-500" />
                   </div>
 
@@ -112,7 +114,7 @@ const Page = () => {
 
                   <div className="bg-[#9a9a9c34] h-12 w-12 rounded-full flex flex-col items-center justify-center">
                     <Youtube className="text-blue-500" />
-                  </div>
+                  </div> */}
                 </div>
               </div>
 
@@ -122,10 +124,10 @@ const Page = () => {
                 </h1>
                 <p>
                   When you work with us, you&apos;re working directly with the
-                  owner. Scott Cooper personally oversees every project to ensure
-                  the highest quality standards are met. We&apos;re committed to
-                  providing exceptional service, transparent communication, and
-                  lasting results for every client.
+                  owner. Scott Cooper personally oversees every project to
+                  ensure the highest quality standards are met. We&apos;re
+                  committed to providing exceptional service, transparent
+                  communication, and lasting results for every client.
                 </p>
               </div>
             </div>
