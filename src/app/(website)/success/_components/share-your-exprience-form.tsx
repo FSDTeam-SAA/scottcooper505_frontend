@@ -17,6 +17,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { useMutation } from "@tanstack/react-query";
 import { toast } from "sonner";
 import { useSession } from "next-auth/react";
+import { useSearchParams } from "next/navigation";
 
 const formSchema = z.object({
   rating: z.number().min(1, { message: "Please rate us!" }),
@@ -29,6 +30,10 @@ const formSchema = z.object({
 type FormValues = z.infer<typeof formSchema>;
 
 export default function ShareExperienceForm() {
+
+  const searchParams = useSearchParams();
+  const serviceId = searchParams.get("serviceId");
+  // console.log(serviceId)
 
 const session = useSession();
 const token = (session?.data?.user as { accessToken: string })?.accessToken;
@@ -62,8 +67,13 @@ const token = (session?.data?.user as { accessToken: string })?.accessToken;
   });
 
   const onSubmit = (values: FormValues) => {
-    console.log("Submitted Data:", values);
-    mutate(values);
+    // console.log("Submitted Data:", values);
+    const payload = {
+      rating: values.rating,
+      comment: values.comment,
+      serviceId: serviceId
+    }
+    mutate(payload);
   };
 
   const getRatingText = (stars: number) => {
