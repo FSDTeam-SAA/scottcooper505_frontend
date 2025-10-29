@@ -11,8 +11,8 @@ const page = () => {
           title="Our Services"
           desc={
             <>
-            Comprehensive construction solutions for residential and <br /> commercial
-          properties in north-west Tennessee and surrounding areas.
+              Comprehensive construction solutions for residential properties{" "}
+              <br /> in the North-West Tennessee and surrounding areas.
             </>
           }
         />
