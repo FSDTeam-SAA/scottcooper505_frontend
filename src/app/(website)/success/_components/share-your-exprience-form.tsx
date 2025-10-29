@@ -17,7 +17,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { useMutation } from "@tanstack/react-query";
 import { toast } from "sonner";
 import { useSession } from "next-auth/react";
-import { useSearchParams } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 
 const formSchema = z.object({
   rating: z.number().min(1, { message: "Please rate us!" }),
@@ -30,7 +30,7 @@ const formSchema = z.object({
 type FormValues = z.infer<typeof formSchema>;
 
 export default function ShareExperienceForm() {
-
+const router = useRouter();
   const searchParams = useSearchParams();
   const serviceId = searchParams.get("serviceId");
   // console.log(serviceId)
@@ -62,7 +62,7 @@ const token = (session?.data?.user as { accessToken: string })?.accessToken;
         return;
       }
       toast.success(data?.message || "Review submitted successfully!");
-      form.reset();
+      router.push("/");
     },
   });
 
@@ -71,7 +71,7 @@ const token = (session?.data?.user as { accessToken: string })?.accessToken;
     const payload = {
       rating: values.rating,
       comment: values.comment,
-      serviceId: serviceId
+      service: serviceId
     }
     mutate(payload);
   };
