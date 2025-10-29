@@ -1,6 +1,6 @@
 import Link from "next/link";
-import React from "react";
-// import ShareExperienceForm from "./_components/share-your-exprience-form";
+import React, { Suspense } from "react";
+import ShareExperienceForm from "./_components/share-your-exprience-form";
 
 const SuccessPage = () => {
   return (
@@ -9,9 +9,11 @@ const SuccessPage = () => {
         Booking Successfully
       </h2>
 
-      {/* <div className="w-full md:w-[600px]">
-        <ShareExperienceForm/>
-      </div> */}
+      <div className="w-full md:w-[600px]">
+        <Suspense fallback={<div>Loading...</div>}>
+          <ShareExperienceForm />
+        </Suspense>
+      </div>
       <div className="mt-10">
         <Link href="/">
           <button className="bg-[#4D0EB9] text-white text-lg font-medium py-4 px-10 rounded-[10px]">
