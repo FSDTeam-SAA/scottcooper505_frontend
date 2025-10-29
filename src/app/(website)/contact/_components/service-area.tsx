@@ -7,7 +7,8 @@ import L from "leaflet";
 
 // Fix default marker icon issue in Leaflet
 type IconDefaultPrototype = { _getIconUrl?: () => string | void };
-delete (L.Icon.Default.prototype as unknown as IconDefaultPrototype)._getIconUrl;
+delete (L.Icon.Default.prototype as unknown as IconDefaultPrototype)
+  ._getIconUrl;
 L.Icon.Default.mergeOptions({
   iconRetinaUrl:
     "https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-icon-2x.png",
@@ -18,7 +19,9 @@ L.Icon.Default.mergeOptions({
 });
 
 const ServiceArea = () => {
-  const position: [number, number] = [23.8103, 90.4125];
+  // const position: [number, number] = [23.8103, 90.4125];
+  // 📍 Updated location: 208 Williams Street, Hornbeak, TN 38232
+  const position: [number, number] = [36.3338, -89.3284];
 
   return (
     <div className="">
