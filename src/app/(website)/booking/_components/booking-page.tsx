@@ -63,51 +63,104 @@ export default function BookingPage({ serviceId }: { serviceId?: string }) {
   const serviceData = data?.data as ServiceData | undefined;
 
   // ✅ Create Checkout Session API
+  // const { mutate: createCheckoutSession, isPending } = useMutation<
+  //   CheckoutResponse,
+  //   Error
+  // >({
+  //   mutationFn: async () => {
+  //     if (!serviceData || !selectedDate || !selectedSlot)
+  //       throw new Error("Missing booking information");
+
+  //     const payload = {
+  //       serviceId: serviceData._id,
+  //       selectedSlots: [
+  //         {
+  //           date: selectedDate.toISOString(),
+  //           startTime: selectedSlot.startTime,
+  //           endTime: selectedSlot.endTime,
+  //         },
+  //       ],
+  //     };
+
+  //     const res = await fetch(
+  //       `${process.env.NEXT_PUBLIC_API_URL}/booking/create-checkout-session`,
+  //       {
+  //         method: "POST",
+  //         headers: { "Content-Type": "application/json",
+  //            Authorization: `Bearer ${token}`,
+
+  //          },
+  //         body: JSON.stringify(payload),
+  //       }
+  //     );
+
+  //     if (!res.ok) throw new Error("Failed to create checkout session");
+  //     return res.json();
+  //   },
+  //   onSuccess: (response) => {
+  //     toast.success(response.message || "Redirecting to checkout...");
+  //     if (response.data?.sessionUrl) {
+  //       // Redirect to Stripe Checkout page
+  //       window.location.href = response.data.sessionUrl;
+  //     }
+  //   },
+  //   onError: (error) => {
+  //     toast.error(error.message || "Something went wrong");
+  //   },
+  // });
+
   const { mutate: createCheckoutSession, isPending } = useMutation<
-    CheckoutResponse,
-    Error
-  >({
-    mutationFn: async () => {
-      if (!serviceData || !selectedDate || !selectedSlot)
-        throw new Error("Missing booking information");
+  CheckoutResponse,
+  Error
+>({
+  mutationFn: async () => {
+    if (!serviceData || !selectedDate || !selectedSlot)
+      throw new Error("Missing booking information");
 
-      const payload = {
-        serviceId: serviceData._id,
-        selectedSlots: [
-          {
-            date: selectedDate.toISOString(),
-            startTime: selectedSlot.startTime,
-            endTime: selectedSlot.endTime,
-          },
-        ],
-      };
+    // ✅ Fix timezone issue: convert to YYYY-MM-DD local date string
+    const localDateString = new Date(
+      selectedDate.getTime() - selectedDate.getTimezoneOffset() * 60000
+    )
+      .toISOString()
+      .split("T")[0]; // e.g. "2025-10-30"
 
-      const res = await fetch(
-        `${process.env.NEXT_PUBLIC_API_URL}/booking/create-checkout-session`,
+    const payload = {
+      serviceId: serviceData._id,
+      selectedSlots: [
         {
-          method: "POST",
-          headers: { "Content-Type": "application/json",
-             Authorization: `Bearer ${token}`,
+          date: localDateString, // ✅ send local date
+          startTime: selectedSlot.startTime,
+          endTime: selectedSlot.endTime,
+        },
+      ],
+    };
 
-           },
-          body: JSON.stringify(payload),
-        }
-      );
-
-      if (!res.ok) throw new Error("Failed to create checkout session");
-      return res.json();
-    },
-    onSuccess: (response) => {
-      toast.success(response.message || "Redirecting to checkout...");
-      if (response.data?.sessionUrl) {
-        // Redirect to Stripe Checkout page
-        window.location.href = response.data.sessionUrl;
+    const res = await fetch(
+      `${process.env.NEXT_PUBLIC_API_URL}/booking/create-checkout-session`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify(payload),
       }
-    },
-    onError: (error) => {
-      toast.error(error.message || "Something went wrong");
-    },
-  });
+    );
+
+    if (!res.ok) throw new Error("Failed to create checkout session");
+    return res.json();
+  },
+  onSuccess: (response) => {
+    toast.success(response.message || "Redirecting to checkout...");
+    if (response.data?.sessionUrl) {
+      window.location.href = response.data.sessionUrl;
+    }
+  },
+  onError: (error) => {
+    toast.error(error.message || "Something went wrong");
+  },
+});
+
 
   // ✅ Loading state
   if (isLoading) {
