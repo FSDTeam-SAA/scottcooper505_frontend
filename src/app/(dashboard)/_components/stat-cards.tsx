@@ -40,7 +40,8 @@ const {data, isLoading, isError, error} = useQuery<DashboardStatsResponse>({
       },
     });
     return res.json();
-  }
+  },
+   enabled: !!token
 })
 
 console.log(data)

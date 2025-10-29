@@ -47,6 +47,7 @@ export function TopServices() {
       if (!res.ok) throw new Error("Failed to fetch dashboard data");
       return res.json();
     },
+     enabled: !!token
   });
 
   if (isLoading) return <DashboardTopServicesSkeleton/>

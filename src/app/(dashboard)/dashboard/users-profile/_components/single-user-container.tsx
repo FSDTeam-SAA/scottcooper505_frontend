@@ -70,8 +70,12 @@ const SingleUserContainer = ({
     },
   });
 
-  if (isLoading) return <div>Loading...</div>;
-  if (isError) return <div>Error: {error.message}</div>;
+  // if (isLoading) return <div>Loading...</div>;
+  // if (isError) return <div>Error: {error.message}</div>;
+
+  console.log(isLoading);
+  console.log(isError, error);
+
   return (
     <div>
       <Dialog open={open} onOpenChange={onOpenChange}>

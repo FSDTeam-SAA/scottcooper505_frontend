@@ -17,6 +17,8 @@ import ScottcooperPagination from "@/components/ui/ScottcooperPagination";
 import DeleteModal from "@/components/modal/DeleteModal";
 import { toast } from "sonner";
 import SingleUserContainer from "./single-user-container";
+import TableSkeletonWrapper from "@/components/shared/TableSkeletonWrapper/TableSkeletonWrapper";
+import ErrorContainer from "@/components/shared/ErrorContainer/ErrorContainer";
 
 export interface UserApiResponse {
   status: boolean;
@@ -124,8 +126,12 @@ const UserProfileContainer = () => {
     setDeleteModalOpen(false);
   };
 
-  if (isLoading) return <div>Loading...</div>;
-  if (isError) return <div>Error: {error.message}</div>;
+  if (isLoading) {
+    return   <TableSkeletonWrapper count={6} width="100%" height="100px" className="bg-white" />
+  }
+  if (isError) {
+    return <ErrorContainer message={error?.message ?? "Failed to get data"} />
+  }
 
   console.log(data);
   return (
