@@ -1,7 +1,10 @@
 "use client";
 
 import { useQuery } from "@tanstack/react-query";
+import { useSession } from "next-auth/react";
 import Image from "next/image";
+import DashboardOverviewSkeleton from "./dashboard-overview-skeleton";
+import ErrorContainer from "@/components/shared/ErrorContainer/ErrorContainer";
 
 export interface DashboardStatsResponse {
   success: boolean;
@@ -24,18 +27,26 @@ export interface TopService {
 
 
 export function StatCards() {
-
+  const session = useSession();
+  const token = (session?.data?.user as { accessToken: string })?.accessToken;
 const {data, isLoading, isError, error} = useQuery<DashboardStatsResponse>({
   queryKey: ["dashboard-overview"],
   queryFn: async () =>{
-    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/dashboard/static-data`);
+    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/dashboard/static-data`,{
+      method: "GET",
+      headers: {
+        "content-type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+    });
     return res.json();
-  }
+  },
+   enabled: !!token
 })
 
 console.log(data)
-if(isLoading) return <h1>Loading...</h1>
-if(isError) return <h1>{error.message}</h1>
+if(isLoading) return <DashboardOverviewSkeleton/>
+if(isError) return <ErrorContainer message={error?.message ?? "Failed to get data"} />
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
       <div className="col-span-1 bg-[#EDE7F8] rounded-[8px] p-3">

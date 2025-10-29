@@ -19,6 +19,8 @@ import moment from "moment";
 import DeleteModal from "@/components/modal/DeleteModal";
 import { toast } from "sonner";
 import { useSession } from "next-auth/react";
+import TableSkeletonWrapper from "@/components/shared/TableSkeletonWrapper/TableSkeletonWrapper";
+import ErrorContainer from "@/components/shared/ErrorContainer/ErrorContainer";
 
 export interface ServiceResponse {
   status: boolean;
@@ -89,6 +91,7 @@ const ServicesContainer = () => {
       );
       return res.json();
     },
+    enabled: !!token,
   });
 
   console.log(data?.data?.services);
@@ -103,6 +106,7 @@ const ServicesContainer = () => {
           Authorization: `Bearer ${token}`,
         },
       }).then((res) => res.json()),
+      
     onSuccess: (data) => {
       if (!data?.status) {
         toast.error(data?.message || "Failed to delete service");
@@ -112,6 +116,7 @@ const ServicesContainer = () => {
       }
       queryClient.invalidateQueries({ queryKey: ["services"] });
     },
+    
   });
 
   // delete modal logic
@@ -122,11 +127,13 @@ const ServicesContainer = () => {
     setDeleteModalOpen(false);
   };
   if (isLoading) {
-    return <div>Loading...</div>;
+    return   <TableSkeletonWrapper count={6} width="100%" height="100px" className="bg-white" />
   }
   if (isError) {
-    return <div>Error: {error?.message}</div>;
+    return <ErrorContainer message={error?.message ?? "Failed to get data"} />
   }
+
+
 
   return (
     <div>

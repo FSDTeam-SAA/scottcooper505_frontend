@@ -10,6 +10,7 @@ interface Service {
   thumbnail: string;
   title: string;
   description: string;
+  price: number;
 }
 
 interface Props {
@@ -17,7 +18,6 @@ interface Props {
 }
 
 const ServiceCard = ({ service }: Props) => {
-
   return (
     <div className="p-5 rounded-lg shadow-[0px_0px_60px_0px_#0000003D] group ">
       <div className="overflow-hidden rounded-lg">
@@ -31,8 +31,12 @@ const ServiceCard = ({ service }: Props) => {
       </div>
 
       <h1 className="mt-2 font-bold text-lg">{service?.title}</h1>
-      <p className="text-sm md:text-base text-[#4A484E] leading-[150%] my-3">
+      <p className="text-sm md:text-base text-[#4A484E] leading-[150%] my-1">
         {getTruncatedText(service?.description, 100)}
+      </p>
+
+      <p className="text-base md:text-lg font-semibold text-black leading-[120%] pb-2">
+        Price : $ {service?.price}
       </p>
 
       <div className="flex items-center justify-between">

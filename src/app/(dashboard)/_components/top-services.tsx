@@ -2,8 +2,11 @@
 
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { useQuery } from "@tanstack/react-query";
+import { useSession } from "next-auth/react";
 import Link from "next/link";
 import { PieChart, Pie, Cell, Tooltip, ResponsiveContainer } from "recharts";
+import DashboardTopServicesSkeleton from "./dashboard-top-service-skeleton";
+import ErrorContainer from "@/components/shared/ErrorContainer/ErrorContainer";
 
 export interface DashboardStatsResponse {
   success: boolean;
@@ -27,19 +30,28 @@ export interface TopService {
 const COLORS = ["#FF557A", "#C79B0C", "#2A9D90"];
 
 export function TopServices() {
+    const session = useSession();
+    const token = (session?.data?.user as { accessToken: string })?.accessToken;
   const { data, isLoading, isError, error } = useQuery<DashboardStatsResponse>({
     queryKey: ["dashboard-overview"],
     queryFn: async () => {
       const res = await fetch(
-        `${process.env.NEXT_PUBLIC_API_URL}/dashboard/static-data`
+        `${process.env.NEXT_PUBLIC_API_URL}/dashboard/static-data`,{
+          method: "GET",
+          headers: {
+            "content-type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+        }
       );
       if (!res.ok) throw new Error("Failed to fetch dashboard data");
       return res.json();
     },
+     enabled: !!token
   });
 
-  if (isLoading) return <h1>Loading...</h1>;
-  if (isError) return <h1>{(error as Error).message}</h1>;
+  if (isLoading) return <DashboardTopServicesSkeleton/>
+  if (isError) return  <ErrorContainer message={error?.message ?? "Failed to get data"} />
 
   // Safely map dynamic data for the chart
   const chartData =
@@ -55,7 +67,7 @@ export function TopServices() {
     <Card className="bg-[#EDE7F8] rounded-[8px]">
       <CardHeader className="pb-4">
         <div className="flex items-center justify-between">
-          <CardTitle className="text-lg font-bold text-[#131313] leading-[120%]">
+          <CardTitle className="text-base font-bold text-[#131313] leading-[120%]">
             Top 3 Services
           </CardTitle>
           <Link href="/dashboard/services">
@@ -66,7 +78,7 @@ export function TopServices() {
         </div>
       </CardHeader>
 
-      <CardContent className="space-y-3">
+      <CardContent className="space-y-0">
         <div className="flex justify-center">
           <div className="relative w-[358px] h-[358px]">
             <ResponsiveContainer width={358} height={358}>

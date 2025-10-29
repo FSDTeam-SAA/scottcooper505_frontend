@@ -48,7 +48,7 @@ const formSchema = z.object({
   title: z.string().min(2, "Title must be at least 2 characters."),
   price: z.coerce.number().positive("Price must be a positive number"),
   description: z.string().min(2, "Description must be at least 2 characters."),
-    duration: z
+  duration: z
     .string()
     .min(1, "Duration is required")
     .regex(
@@ -142,15 +142,33 @@ export default function AddServiceForm() {
     },
   });
 
+  // const onSubmit = (values: FormValues) => {
+  //   console.log("Form values (design preview):", values);
+  //   const formData = new FormData();
+  //   formData.append("title", values.title);
+  //   formData.append("price", values.price.toString());
+  //   formData.append("description", values.description);
+  //   formData.append("duration", values.duration);
+  //   formData.append("thumbnail", values.thumbnail as File);
+  //   formData.append("schedule", JSON.stringify(values.schedule));
+  //   mutate(formData);
+  // };
+
   const onSubmit = (values: FormValues) => {
-    console.log("Form values (design preview):", values);
     const formData = new FormData();
     formData.append("title", values.title);
     formData.append("price", values.price.toString());
     formData.append("description", values.description);
     formData.append("duration", values.duration);
-    formData.append("thumbnail", values.thumbnail as File);
-    formData.append("schedule", JSON.stringify(values.schedule));
+    if (values.thumbnail) formData.append("thumbnail", values.thumbnail);
+
+    const normalizedSchedule = values.schedule.map((item) => ({
+      date: format(item.date, "yyyy-MM-dd"),
+      startTime: item.startTime,
+      endTime: item.endTime,
+    }));
+
+    formData.append("schedule", JSON.stringify(normalizedSchedule));
     mutate(formData);
   };
 
@@ -493,14 +511,9 @@ export default function AddServiceForm() {
                 />
               </div>
             </div>
-
-            
           </form>
         </Form>
       </div>
     </div>
   );
 }
-
-
-

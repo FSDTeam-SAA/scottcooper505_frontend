@@ -11,6 +11,9 @@ import { useQuery } from "@tanstack/react-query";
 import moment from "moment";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import Link from "next/link";
+import { useSession } from "next-auth/react";
+import DashboardBookingHistorySkeleton from "./dashboard-booking-history-skeleton";
+import ErrorContainer from "@/components/shared/ErrorContainer/ErrorContainer";
 
 export interface BookingsResponse {
   status: boolean;
@@ -46,34 +49,46 @@ export interface Pagination {
 }
 
 export function BookingHistory() {
+
+  const session = useSession();
+  const token = (session?.data?.user as { accessToken: string })?.accessToken;
   const { data, isLoading, isError, error } = useQuery<BookingsResponse>({
     queryKey: ["booking-history"],
     queryFn: () =>
       fetch(
-        `${process.env.NEXT_PUBLIC_API_URL}/dashboard/booking-history?page=1&limit=5`
+        `${process.env.NEXT_PUBLIC_API_URL}/dashboard/booking-history`,{
+          method: "GET",
+          headers: {
+            "content-type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+        }
       ).then((res) => res.json()),
+      enabled: !!token
   });
 
   console.log(data?.data);
-  if (isLoading) return <div>Loading...</div>;
-  if (isError) return <div>Error: {error.message}</div>;
+  if (isLoading) return <DashboardBookingHistorySkeleton/>
+  if (isError) return <ErrorContainer message={error?.message ?? "Failed to get data"} />
   return (
     <div>
       <Card className="bg-[#EDE7F8] rounded-[8px] px-6 pb-[10px]">
         <CardHeader className="">
-          <div className="flex items-center justify-between">
-            <CardTitle className="text-lg font-bold text-[#131313] leading-[120%]">
+          <div className="w-full flex items-center justify-between">
+            <CardTitle className="text-base font-bold text-[#131313] leading-[120%]">
               Top 5 Booking History
             </CardTitle>
-            <Link href="/dashboard/booking-history">
+            <div>
+              <Link href="/dashboard/booking-history">
               <button className="text-base text-[#4D0EB9] bg-[#C8B4E9] py-2 px-4 rounded-[8px] font-bold hover:underline">
                 See all
               </button>
             </Link>
+            </div>
           </div>
         </CardHeader>
 
-        <CardContent className=" bg-white rounded-[8px] p-6">
+        <CardContent className=" bg-white rounded-[8px] p-6 ">
           <Table>
             <TableHeader>
               <TableRow className="border border-[#B6B6B6]">
@@ -96,7 +111,7 @@ export function BookingHistory() {
             </TableHeader>
             <TableBody className="border border-[#B6B6B6]">
               {data?.data?.bookings && data.data.bookings?.length > 0 ? (
-                data.data.bookings?.map((booking) => (
+                data.data.bookings?.slice(0, 5).map((booking) => (
                   <TableRow
                     key={booking._id}
                     className="border border-[#B6B6B6]"
