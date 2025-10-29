@@ -130,6 +130,12 @@ const Navbar = () => {
                   </DropdownMenuItem>
                   <DropdownMenuItem
                     className="cursor-pointer font-semibold"
+                    onClick={() => router.push("/change-password")}
+                  >
+                    Change Password
+                  </DropdownMenuItem>
+                  <DropdownMenuItem
+                    className="cursor-pointer font-semibold"
                     onClick={() => router.push("/my-booking")}
                   >
                     My Booking

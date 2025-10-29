@@ -16,23 +16,43 @@ import {
 import { Input } from "@/components/ui/input";
 import { useSession } from "next-auth/react";
 import { useChnagePassword } from "@/hooks/APiCalling";
-import { Loader2 } from "lucide-react";
+import { Eye, EyeOff, Loader2 } from "lucide-react";
+import { useState } from "react";
 
-const formSchema = z.object({
-  currentPassword: z.string().min(2, {
-    message: "currentPassword must be at least 2 characters.",
-  }),
-  newPassword: z.string().min(2, {
-    message: "newPassword must be at least 2 characters.",
-  }),
-  confirmPassword: z.string().min(2, {
-    message: "confirmPassword must be at least 2 characters.",
-  }),
-});
+export const formSchema = z
+  .object({
+    currentPassword: z
+      .string()
+      .min(6, { message: "Current password must be at least 6 characters." }),
+
+    newPassword: z
+      .string()
+      .min(8, { message: "New password must be at least 8 characters." })
+      .regex(/[A-Z]/, { message: "New password must contain at least one uppercase letter." })
+      .regex(/[a-z]/, { message: "New password must contain at least one lowercase letter." })
+      .regex(/[0-9]/, { message: "New password must contain at least one number." })
+      .regex(/[^A-Za-z0-9]/, { message: "New password must contain at least one special character." }),
+
+    confirmPassword: z
+      .string()
+      .min(8, { message: "Confirm password must be at least 8 characters." }),
+  })
+  .refine((data) => data.newPassword === data.confirmPassword, {
+    path: ["confirmPassword"],
+    message: "Passwords do not match.",
+  })
+  .refine((data) => data.newPassword !== data.currentPassword, {
+    path: ["newPassword"],
+    message: "New password must be different from the current password.",
+  });
+
 
 const ChangePasswordForm = () => {
-  const { data: session } = useSession()
-  const token = (session?.user as { accessToken: string })?.accessToken
+  const [currentPassword, setCurrentPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+  const [showNewPassword, setShowNewPassword] = useState(false);
+  const { data: session } = useSession();
+  const token = (session?.user as { accessToken: string })?.accessToken;
   const changePasswordMutation = useChnagePassword(token);
 
   const form = useForm<z.infer<typeof formSchema>>({
@@ -43,10 +63,6 @@ const ChangePasswordForm = () => {
       confirmPassword: "",
     },
   });
-
-
-
-
 
   function onSubmit(values: z.infer<typeof formSchema>) {
     changePasswordMutation.mutate({
@@ -63,7 +79,6 @@ const ChangePasswordForm = () => {
       <div className="pt-6 md:pt-7 lg:pt-8">
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-5">
-
             <FormField
               control={form.control}
               name="currentPassword"
@@ -73,11 +88,21 @@ const ChangePasswordForm = () => {
                     Current Password
                   </FormLabel>
                   <FormControl>
-                    <Input
-                      className="h-[56px] border border-[#645949] rounded-[8px] text-base md:text-lg font-normal text-[#616161] leading-[120%]"
-                      placeholder="#############"
-                      {...field}
-                    />
+                    <div className="relative">
+                      <Input
+                        type={currentPassword ? "text" : "password"}
+                        className="h-[56px] border border-[#645949] rounded-[8px] text-base md:text-lg font-normal text-[#616161] leading-[120%]"
+                        placeholder="#############"
+                        {...field}
+                      />
+                      <button
+                      type="button"
+                        onClick={() => setCurrentPassword(!currentPassword)}
+                        className="absolute right-4 top-4"
+                      >
+                        {currentPassword ? <Eye /> : <EyeOff />}
+                      </button>
+                    </div>
                   </FormControl>
                   <FormMessage className="text-red-500" />
                 </FormItem>
@@ -94,11 +119,21 @@ const ChangePasswordForm = () => {
                       New Password
                     </FormLabel>
                     <FormControl>
+                      <div className="relative">
                       <Input
+                        type={showNewPassword ? "text" : "password"}
                         className="h-[56px] border border-[#645949] rounded-[8px] text-base md:text-lg font-normal text-[#616161] leading-[120%]"
                         placeholder="#############"
                         {...field}
                       />
+                      <button
+                      type="button"
+                        onClick={() => setShowNewPassword(!showNewPassword)}
+                        className="absolute right-4 top-4"
+                      >
+                        {showNewPassword ? <Eye /> : <EyeOff />}
+                      </button>
+                    </div>
                     </FormControl>
                     <FormMessage className="text-red-500" />
                   </FormItem>
@@ -113,11 +148,21 @@ const ChangePasswordForm = () => {
                       Confirm New Password
                     </FormLabel>
                     <FormControl>
+                     <div className="relative">
                       <Input
+                        type={showConfirmPassword ? "text" : "password"}
                         className="h-[56px] border border-[#645949] rounded-[8px] text-base md:text-lg font-normal text-[#616161] leading-[120%]"
                         placeholder="#############"
                         {...field}
                       />
+                      <button
+                      type="button"
+                        onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                        className="absolute right-4 top-4"
+                      >
+                        {showConfirmPassword ? <Eye /> : <EyeOff />}
+                      </button>
+                    </div>
                     </FormControl>
                     <FormMessage className="text-red-500" />
                   </FormItem>
@@ -129,7 +174,10 @@ const ChangePasswordForm = () => {
               className="w-full h-[48px] text-base text-white leading-[120%] font-bold bg-[#4D0EB9] rounded-[8px]"
               type="submit"
             >
-              Save {changePasswordMutation.isPending && <Loader2 className="animate-spin" />}
+              Save{" "}
+              {changePasswordMutation.isPending && (
+                <Loader2 className="animate-spin" />
+              )}
             </Button>
           </form>
         </Form>
