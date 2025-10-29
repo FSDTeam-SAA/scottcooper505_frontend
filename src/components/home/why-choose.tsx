@@ -11,7 +11,7 @@ export const WhyChoose = () => {
     {
       icon: "/choose-3.png",
       title: "Family-Owned & North-West Tennessee",
-      desc: "We're proud to be a local, family-operated business serving our Houston community.",
+      desc: "We're proud to be a local, family-operated business serving our North-West Tennessee community.",
     },
   ];
 
