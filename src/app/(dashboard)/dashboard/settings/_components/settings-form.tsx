@@ -26,8 +26,11 @@ import { CalendarIcon, Save, X } from "lucide-react";
 import React, { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import z from "zod";
-import { cn } from "@/lib/utils"; // You might need to import this utility
+import { cn } from "@/lib/utils";
 import { useSettingsStore } from "@/zustand/settingsStore";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { toast } from "sonner";
+import { useSession } from "next-auth/react";
 
 enum Gender {
   Male = "male",
@@ -53,7 +56,7 @@ const formSchema = z.object({
   phoneNumber: z.string(),
   gender: z.enum(["male", "female"]),
   birthDate: z.string(),
-  address: z.string(),
+  address: z.string()
 });
 
 type formValue = z.infer<typeof formSchema>;
@@ -72,7 +75,10 @@ function formatDate(date: Date | undefined) {
 export const SettingsForm = ({ profileInfo }: Props) => {
   const [open, setOpen] = useState(false);
   const { showSubmit, setShowSubmit } = useSettingsStore();
-  const [date, setDate] = useState<Date | undefined>(new Date("2025-06-01"));
+  const [date, setDate] = useState<Date | undefined>();
+  const queryClient = useQueryClient();
+  const session = useSession();
+  const token = (session?.data?.user as { accessToken: string })?.accessToken;
 
   const form = useForm<formValue>({
     resolver: zodResolver(formSchema),
@@ -85,18 +91,98 @@ export const SettingsForm = ({ profileInfo }: Props) => {
     },
   });
 
-  useEffect(() => {
-    form.reset({
-      name: profileInfo?.name || "",
-      gender: profileInfo?.gender || "",
-      birthDate: profileInfo?.birthDate || "",
-      address: profileInfo?.address || "",
-      phoneNumber: profileInfo?.phoneNumber || "",
+  // Update user mutation
+  const updateUserMutation = useMutation({
+    mutationFn: (data: formValue) => {
+      const updateData = {
+        name: data.name,
+        phone: data.phoneNumber,
+        gender: data.gender,
+        address: data.address,
+        dob: date?.toISOString(), // Convert Date to ISO string for API
+      };
+      return updateUserProfile(updateData);
+    },
+    onSuccess: () => {
+      // Invalidate and refetch relevant queries
+      queryClient.invalidateQueries({ queryKey: ["user"] });
+      queryClient.invalidateQueries({ queryKey: ["profile"] });
+      queryClient.invalidateQueries({ queryKey: ["userProfile"] });
+
+      toast.success("Profile updated successfully!");
+      setShowSubmit(false);
+    },
+    onError: (error: Error) => {
+      toast.error(error.message || "Failed to update profile");
+    },
+  });
+
+  const updateUserProfile = async (userData: {
+    name: string;
+    phone: string;
+    gender: string;
+    dob?: string;
+    address: string;
+  }) => {
+    const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/user/me`, {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+      body: JSON.stringify(userData),
     });
+
+    if (!response.ok) {
+      const errorData = await response.json();
+      throw new Error(errorData.message || "Failed to update profile");
+    }
+
+    return response.json();
+  };
+
+  useEffect(() => {
+    if (profileInfo) {
+      // Parse birthDate from profileInfo
+      const birthDate = profileInfo.birthDate
+        ? new Date(profileInfo.birthDate)
+        : undefined;
+      setDate(birthDate);
+
+      form.reset({
+        name: profileInfo?.name || "",
+        gender: profileInfo?.gender || "male",
+        birthDate: profileInfo?.birthDate || "",
+        address: profileInfo?.address || "",
+        phoneNumber: profileInfo?.phoneNumber || "",
+      });
+    }
   }, [form, profileInfo]);
 
   const onSubmit = (value: formValue) => {
-    console.log("value: ", value);
+    toast.promise(updateUserMutation.mutateAsync(value), {
+      loading: "Updating profile...",
+      success: "Profile updated successfully!",
+      error: (error) => error.message || "Failed to update profile",
+    });
+  };
+
+  const handleCancel = () => {
+    if (profileInfo) {
+      const birthDate = profileInfo.birthDate
+        ? new Date(profileInfo.birthDate)
+        : undefined;
+      setDate(birthDate);
+
+      form.reset({
+        name: profileInfo?.name || "",
+        gender: profileInfo?.gender || "male",
+        birthDate: profileInfo?.birthDate || "",
+        address: profileInfo?.address || "",
+        phoneNumber: profileInfo?.phoneNumber || "",
+      });
+    }
+    setShowSubmit(false);
   };
 
   return (
@@ -243,16 +329,23 @@ export const SettingsForm = ({ profileInfo }: Props) => {
 
           {showSubmit && (
             <div className="flex items-center justify-end mt-8">
-              <div className="space-x-5">
+              <div className="flex items-center space-x-5">
                 <Button
                   variant="outline"
                   type="button"
-                  onClick={() => setShowSubmit(false)}
+                  onClick={handleCancel}
+                  disabled={updateUserMutation.isPending}
                 >
-                  <X /> Cancel
+                  <X className="w-4 h-4 mr-2" /> Cancel
                 </Button>
-                <Button type="submit">
-                  <Save /> Save
+                <Button type="submit" disabled={updateUserMutation.isPending}>
+                  {updateUserMutation.isPending ? (
+                    "Saving..."
+                  ) : (
+                    <>
+                      <Save className="w-4 h-4 mr-2" /> Save
+                    </>
+                  )}
                 </Button>
               </div>
             </div>
